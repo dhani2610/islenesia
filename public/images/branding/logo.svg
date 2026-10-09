@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 100" fill="none">
+  <!-- Geometric Emblem: Navy Hexagon with Gold Golden Wings/Sprout & Globe Latitude lines -->
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCE082" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#997014" />
+    </linearGradient>
+    <linearGradient id="navyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E234A" />
+      <stop offset="100%" stop-color="#071226" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Emblem Badge -->
+  <polygon points="50,10 88,32 88,76 50,98 12,76 12,32" fill="url(#navyGrad)" stroke="url(#goldGrad)" stroke-width="2.5"/>
+  
+  <!-- Stylized Commodity Sprout / Globe Vessel in Gold -->
+  <circle cx="50" cy="54" r="26" stroke="#D4AF37" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.6"/>
+  <path d="M50 28 C50 42 62 48 64 62 C64 70 58 76 50 76 C42 76 36 70 36 62 C38 48 50 42 50 28 Z" fill="url(#goldGrad)"/>
+  <path d="M50 40 L50 72" stroke="#071226" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="50" cy="38" r="3.5" fill="#FFFFFF"/>
+  <circle cx="34" cy="54" r="2" fill="#D4AF37"/>
+  <circle cx="66" cy="54" r="2" fill="#D4AF37"/>
+  
+  <!-- Text Brand -->
+  <text x="110" y="52" font-family="'Plus Jakarta Sans', 'Inter', 'Segoe UI', sans-serif" font-weight="900" font-size="34" fill="#0E234A" letter-spacing="2">ISLE<tspan fill="#C59B27">NESIA</tspan></text>
+  <text x="112" y="74" font-family="'Plus Jakarta Sans', 'Inter', 'Segoe UI', sans-serif" font-weight="600" font-size="12" fill="#D4AF37" letter-spacing="4">INDONESIAN AGRO EXPORT</text>
+</svg>

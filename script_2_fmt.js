@@ -1,0 +1,86 @@
+ function toggleLangDropdown() {
+ const menu = document.getElementById('langDropdownMenu');
+ if (menu) menu.classList.toggle('show');
+ }
+ function toggleNavLangDropdown() {
+ const menu = document.getElementById('navLangDropdownMenu');
+ if (menu) menu.classList.toggle('show');
+ }
+ document.addEventListener('click', function(e) {
+ const topDropdown = document.querySelector('.top-bar .lang-dropdown-wrapper');
+ const topMenu = document.getElementById('langDropdownMenu');
+ if (topDropdown && !topDropdown.contains(e.target) && topMenu) {
+ topMenu.classList.remove('show');
+ }
+ const navDropdown = document.querySelector('.navbar-lang-wrapper');
+ const navMenu = document.getElementById('navLangDropdownMenu');
+ if (navDropdown && !navDropdown.contains(e.target) && navMenu) {
+ navMenu.classList.remove('show');
+ }
+ }
+);
+ function setTranslateCookie(lang) {
+ const val = '/id/' + lang;
+ const expires = new Date(Date.now() + 30 * 86400 * 1000).toUTCString();
+ // 30 days // Set cookie for root path and hostname document.cookie = "googtrans=" + val + ";
+ expires=" + expires + ";
+ path=/;
+";
+ document.cookie = "googtrans=" + val + ";
+ expires=" + expires + ";
+ path=/;
+ domain=" + window.location.hostname + ";
+";
+ localStorage.setItem('manunggaland_lang', lang);
+ }
+ function changeLanguage(lang, flag, label) {
+ setTranslateCookie(lang);
+ // Update UI flag & label on Top Bar const currentFlag = document.getElementById('currentLangFlag');
+ const currentLabel = document.getElementById('currentLangLabel');
+ if (currentFlag) currentFlag.textContent = flag;
+ if (currentLabel) currentLabel.textContent = label;
+ // Update UI flag & label on Navbar const navFlag = document.getElementById('navCurrentLangFlag');
+ const navLabel = document.getElementById('navCurrentLangLabel');
+ if (navFlag) navFlag.textContent = flag;
+ if (navLabel) navLabel.textContent = label;
+ // Close dropdowns const menu1 = document.getElementById('langDropdownMenu');
+ if (menu1) menu1.classList.remove('show');
+ const menu2 = document.getElementById('navLangDropdownMenu');
+ if (menu2) menu2.classList.remove('show');
+ // Apply via Google Translate select box if available const selectEl = document.querySelector('.goog-te-combo');
+ if (selectEl) {
+ selectEl.value = lang;
+ selectEl.dispatchEvent(new Event('change'));
+ }
+ else {
+ // Reload to apply cookie transformation smoothly window.location.reload();
+ }
+ }
+ // Auto-restore language preference from Cookie or LocalStorage on page load document.addEventListener('DOMContentLoaded', function() {
+ const savedLang = localStorage.getItem('manunggaland_lang');
+ if (savedLang) {
+ const flagMap = {
+ 'id': {
+ flag: '🇮🇩', label: 'ID' }
+, 'en': {
+ flag: '🇬🇧', label: 'EN' }
+, 'zh-CN': {
+ flag: '🇨🇳', label: '中文' }
+ }
+;
+ if (flagMap[savedLang]) {
+ const cFlag = flagMap[savedLang].flag;
+ const cLabel = flagMap[savedLang].label;
+ const currentFlag = document.getElementById('currentLangFlag');
+ const currentLabel = document.getElementById('currentLangLabel');
+ if (currentFlag) currentFlag.textContent = cFlag;
+ if (currentLabel) currentLabel.textContent = cLabel;
+ const navFlag = document.getElementById('navCurrentLangFlag');
+ const navLabel = document.getElementById('navCurrentLangLabel');
+ if (navFlag) navFlag.textContent = cFlag;
+ if (navLabel) navLabel.textContent = cLabel;
+ }
+ }
+ }
+);
+ 
