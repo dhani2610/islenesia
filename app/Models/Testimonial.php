@@ -27,7 +27,7 @@ class Testimonial extends Model
 
     public function getAvatarUrlAttribute(): string
     {
-        if ($this->avatar && file_exists(public_path('storage/' . $this->avatar))) {
+        if ($this->avatar && (file_exists(public_path('storage/' . $this->avatar)) || file_exists(storage_path('app/public/' . $this->avatar)))) {
             return asset('storage/' . $this->avatar);
         }
         if ($this->avatar && str_starts_with($this->avatar, 'http')) {

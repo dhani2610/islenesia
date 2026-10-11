@@ -116,7 +116,7 @@
     <header class="site-navbar">
         <div class="container">
             <a href="{{ route('home') }}" class="brand-logo">
-                @if(!empty($siteSettings['site_logo']) && file_exists(public_path('storage/' . $siteSettings['site_logo'])))
+                @if(!empty($siteSettings['site_logo']) && (file_exists(public_path('storage/' . $siteSettings['site_logo'])) || file_exists(storage_path('app/public/' . $siteSettings['site_logo']))))
                     <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}" alt="{{ $siteSettings['site_name'] ?? 'Islenesia' }}">
                 @else
                     <img src="{{ asset('images/branding/logo.svg') }}" alt="Islenesia Export Indonesia">
@@ -274,7 +274,8 @@
         </div>
     </footer>
 
-    <!-- Interactive Floating WhatsApp Widget Button -->
+    @if(request()->routeIs('catalog.show'))
+    <!-- Interactive Floating WhatsApp Widget Button (Hanya tampil di detail produk) -->
     <div class="wa-floating-btn" onclick="openWhatsAppModal('buyer')" id="waFloatingBtn">
         <div class="wa-btn-icon">
             <div class="wa-pulse"></div>
@@ -285,6 +286,7 @@
             <span>WhatsApp Resmi</span>
         </div>
     </div>
+    @endif
 
     <!-- Modal Dialog Backdrop -->
     <div class="wa-modal-backdrop" id="waModalBackdrop" onclick="closeWhatsAppModal(event)">
@@ -295,7 +297,7 @@
                     <div class="wa-header-brand">
                         <div class="wa-avatar">🌴</div>
                         <div class="wa-header-title">
-                            <h4>Admin Agregator {{ $siteSettings['site_name'] ?? 'Islenesia' }}</h4>
+                            <h4 id="waModalTitle">Admin Agregator {{ $siteSettings['site_name'] ?? 'Islenesia' }}</h4>
                             <p><span class="online-dot"></span> Online & Siap Melayani</p>
                         </div>
                     </div>
@@ -346,8 +348,21 @@
 
                     <!-- Input Pesan / Kebutuhan -->
                     <div class="wa-form-group">
-                        <label for="waInputMessage">Pesan / Kebutuhan</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                            <label for="waInputMessage" style="margin-bottom: 0;">Pesan / Kebutuhan</label>
+                            <span id="waMsgCounter" style="font-size: 0.72rem; color: var(--slate-muted);">Template Siap Kirim</span>
+                        </div>
                         <textarea name="message" id="waInputMessage" class="wa-form-textarea" required></textarea>
+                        
+                        <!-- Quick Template Chips -->
+                        <div class="wa-template-chips">
+                            <button type="button" class="wa-template-chip" id="chipQuote" onclick="applyWaTemplate('quote')">
+                                <i class="fa-solid fa-file-invoice-dollar text-gold"></i> Template Quote (Harga, COA, Sampel, Ongkir)
+                            </button>
+                            <button type="button" class="wa-template-chip" id="chipGeneral" onclick="applyWaTemplate('general')">
+                                <i class="fa-regular fa-comment-dots text-gold"></i> Pesan Umum
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Anti-Bot Captcha Verification Field -->
@@ -469,6 +484,7 @@
         var tabPetani = document.getElementById('tabPetani');
         var waRoleInput = document.getElementById('waRoleInput');
         var waInputMessage = document.getElementById('waInputMessage');
+        window.currentProductName = '';
 
         var buyerPlaceholder = "Saya tertarik untuk membeli komoditas ekspor " + window.SITE_NAME + " (Vanili / Kratom / Kopi / Cengkeh). Mohon info spesifikasi teknis dan penawaran harga FOB/CIF.";
         var petaniPlaceholder = "Saya petani / kelompok tani dari daerah, ingin mengajukan hasil panen komoditas ke agregator " + window.SITE_NAME + ".";
@@ -483,6 +499,46 @@
                 if (tabPetani) tabPetani.classList.add('active');
                 if (tabBuyer) tabBuyer.classList.remove('active');
                 if (waInputMessage) waInputMessage.value = petaniPlaceholder;
+            }
+        };
+
+        window.requestQuoteModal = function(productName, productId) {
+            window.currentProductName = productName || '';
+            var site = window.SITE_NAME || 'Islenesia';
+            var quoteTemplate = "Halo Admin Agregator " + site + ", saya tertarik dengan komoditas *" + (productName || 'Komoditas') + "*.\n\n" +
+                "Saya ingin mengajukan *Request a Quote* resmi untuk rincian berikut:\n" +
+                "1. Penawaran Harga (FOB / CIF)\n" +
+                "2. Certificate of Analysis (COA) / Spesifikasi Lab\n" +
+                "3. Ketersediaan Sampel Produk\n" +
+                "4. Estimasi Biaya Kirim (Freight / Shipping Cost)\n\n" +
+                "Target Pelabuhan / Negara Tujuan:\n" +
+                "Estimasi Kebutuhan / Volume:\n\n" +
+                "Mohon informasi ketersediaan stok dan syarat pemesanan. Terima kasih.";
+
+            window.openWhatsAppModal('buyer', quoteTemplate, productId, 'Request a Quote: ' + (productName || 'Komoditas'));
+        };
+
+        window.applyWaTemplate = function(type) {
+            var site = window.SITE_NAME || 'Islenesia';
+            var chipQuote = document.getElementById('chipQuote');
+            var chipGeneral = document.getElementById('chipGeneral');
+            if (chipQuote) chipQuote.classList.toggle('active', type === 'quote');
+            if (chipGeneral) chipGeneral.classList.toggle('active', type === 'general');
+
+            if (type === 'quote') {
+                var pName = window.currentProductName || 'Komoditas Ekspor';
+                var quoteTemplate = "Halo Admin Agregator " + site + ", saya tertarik dengan komoditas *" + pName + "*.\n\n" +
+                    "Saya ingin mengajukan *Request a Quote* resmi untuk rincian berikut:\n" +
+                    "1. Penawaran Harga (FOB / CIF)\n" +
+                    "2. Certificate of Analysis (COA) / Spesifikasi Lab\n" +
+                    "3. Ketersediaan Sampel Produk\n" +
+                    "4. Estimasi Biaya Kirim (Freight / Shipping Cost)\n\n" +
+                    "Target Pelabuhan / Negara Tujuan:\n" +
+                    "Estimasi Kebutuhan / Volume:\n\n" +
+                    "Mohon informasi ketersediaan stok dan syarat pemesanan. Terima kasih.";
+                if (waInputMessage) waInputMessage.value = quoteTemplate;
+            } else {
+                if (waInputMessage) waInputMessage.value = buyerPlaceholder;
             }
         };
 
@@ -503,7 +559,7 @@
                 });
         };
 
-        window.openWhatsAppModal = function(role, defaultText, productId) {
+        window.openWhatsAppModal = function(role, defaultText, productId, modalTitle) {
             if (!role) role = 'buyer';
             window.switchWaRole(role);
             if (defaultText && waInputMessage) {
@@ -512,6 +568,19 @@
             if (productId) {
                 var pInput = document.getElementById('waProductIdInput');
                 if (pInput) pInput.value = productId;
+            }
+            var titleEl = document.getElementById('waModalTitle');
+            if (titleEl) {
+                titleEl.textContent = modalTitle || ("Admin Agregator " + window.SITE_NAME);
+            }
+            var chipQuote = document.getElementById('chipQuote');
+            var chipGeneral = document.getElementById('chipGeneral');
+            if (defaultText && defaultText.indexOf('Request a Quote') !== -1) {
+                if (chipQuote) chipQuote.classList.add('active');
+                if (chipGeneral) chipGeneral.classList.remove('active');
+            } else {
+                if (chipQuote) chipQuote.classList.remove('active');
+                if (chipGeneral) chipGeneral.classList.add('active');
             }
             window.refreshChatCaptcha();
             if (waModal) waModal.classList.add('active');

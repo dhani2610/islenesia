@@ -51,15 +51,15 @@
 
                 <!-- Action CTA -->
                 <div style="background: #FFFFFF; border: 1px solid var(--slate-border); border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
-                    <span style="font-size: 0.8rem; font-weight: 700; color: #059669; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.5rem;">
-                        <i class="fa-solid fa-circle-check"></i> Siap Melayani Kontrak Ekspor & Sampel Lab
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.5rem;">
+                        <i class="fa-solid fa-circle-check text-gold"></i> Siap Melayani Kontrak Ekspor & Sampel Lab
                     </span>
                     <p style="font-size: 0.875rem; color: var(--slate-muted); margin-bottom: 1.25rem;">
                         Hubungi Meja Ekspor Resmi {{ $siteSettings['site_name'] ?? 'Islenesia' }} untuk penawaran harga FOB / CIF, pengiriman sampel uji laboratorium, atau negosiasi volume kontainer.
                     </p>
-                    <button type="button" class="btn btn-gold btn-lg" style="width: 100%;" onclick="openWhatsAppModal('buyer', 'Halo Admin Agregator ' + (window.SITE_NAME || 'Islenesia') + ', saya tertarik melakukan pemesanan / meminta penawaran untuk komoditas: {{ addslashes($product->name) }}.', {{ $product->id }})">
-                        <i class="fa-brands fa-whatsapp" style="font-size: 1.25rem;"></i>
-                        <span>Inquire via WhatsApp Resmi</span>
+                    <button type="button" class="btn btn-gold btn-lg" style="width: 100%; font-size: 1.05rem; font-weight: 700;" onclick="requestQuoteModal('{{ addslashes($product->name) }}', {{ $product->id }})">
+                        <i class="fa-solid fa-file-invoice-dollar" style="font-size: 1.25rem;"></i>
+                        <span>Request a Quote (Harga, COA, Sampel & Ongkir)</span>
                     </button>
                 </div>
 
@@ -118,9 +118,15 @@
                             <div class="product-body">
                                 <h3 class="product-title">{{ $rel->name }}</h3>
                                 <p class="product-desc">{{ Str::limit($rel->short_description, 90) }}</p>
-                                <a href="{{ route('catalog.show', $rel->slug) }}" class="btn btn-outline-navy btn-sm" style="margin-top: auto;">
-                                    <span>Lihat Spesifikasi</span>
-                                </a>
+                                <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+                                    <a href="{{ route('catalog.show', $rel->slug) }}" class="btn btn-outline-navy btn-sm" style="flex: 1; text-align: center; justify-content: center; padding: 0.45rem 0.5rem;">
+                                        <span>Detail</span>
+                                    </a>
+                                    <button type="button" class="btn btn-gold btn-sm" onclick="requestQuoteModal('{{ addslashes($rel->name) }}', {{ $rel->id }})" style="flex: 1.5; justify-content: center; padding: 0.45rem 0.65rem;" title="Request a Quote (Harga, COA, Sampel & Ongkir)">
+                                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                                        <span>Request Quote</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     @endforeach

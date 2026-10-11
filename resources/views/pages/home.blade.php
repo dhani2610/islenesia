@@ -274,13 +274,13 @@
                             </div>
                         @endif
 
-                        <div style="display: flex; gap: 0.75rem; margin-top: auto;">
-                            <a href="{{ route('catalog.show', $product->slug) }}" class="btn btn-outline-navy btn-sm" style="flex: 1;">
-                                <span>Detail & Spek</span>
+                        <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+                            <a href="{{ route('catalog.show', $product->slug) }}" class="btn btn-outline-navy btn-sm" style="flex: 1; text-align: center; justify-content: center; padding: 0.45rem 0.5rem;">
+                                <span>Detail</span>
                             </a>
-                            <button type="button" class="btn btn-gold btn-sm" onclick="openWhatsAppModal('buyer', 'Halo Admin ' + window.SITE_NAME + ', saya tertarik dengan komoditas {{ addslashes($product->name) }}. Mohon info harga FOB/CIF.', {{ $product->id }})">
-                                <i class="fa-brands fa-whatsapp"></i>
-                                <span>Inquire</span>
+                            <button type="button" class="btn btn-gold btn-sm" onclick="requestQuoteModal('{{ addslashes($product->name) }}', {{ $product->id }})" style="flex: 1.5; justify-content: center; padding: 0.45rem 0.65rem;" title="Request a Quote (Harga, COA, Sampel & Ongkir)">
+                                <i class="fa-solid fa-file-invoice-dollar"></i>
+                                <span>Request a Quote</span>
                             </button>
                         </div>
                     </div>

@@ -116,7 +116,7 @@
                 <div style="background: #F8FAFC; border: 1px solid var(--admin-border); border-radius: 12px; padding: 1.25rem;">
                     <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--admin-navy-surface); margin-bottom: 0.4rem;">Logo Website (PNG, SVG, WebP)</label>
                     <div style="margin-bottom: 0.75rem;">
-                        @if(!empty($settings['site_logo']) && file_exists(public_path('storage/' . $settings['site_logo'])))
+                        @if(!empty($settings['site_logo']) && (file_exists(public_path('storage/' . $settings['site_logo'])) || file_exists(storage_path('app/public/' . $settings['site_logo']))))
                             <img src="{{ asset('storage/' . $settings['site_logo']) }}" alt="Logo" style="height: 48px; width: auto; background: #0B1B3D; padding: 6px; border-radius: 6px;">
                         @else
                             <img src="{{ asset('images/branding/logo.svg') }}" alt="Logo" style="height: 48px; width: auto; background: #0B1B3D; padding: 6px; border-radius: 6px;">
@@ -129,7 +129,7 @@
                 <div style="background: #F8FAFC; border: 1px solid var(--admin-border); border-radius: 12px; padding: 1.25rem;">
                     <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--admin-navy-surface); margin-bottom: 0.4rem;">Favicon Browser (ICO, SVG, PNG)</label>
                     <div style="margin-bottom: 0.75rem;">
-                        @if(!empty($settings['site_favicon']) && file_exists(public_path('storage/' . $settings['site_favicon'])))
+                        @if(!empty($settings['site_favicon']) && (file_exists(public_path('storage/' . $settings['site_favicon'])) || file_exists(storage_path('app/public/' . $settings['site_favicon']))))
                             <img src="{{ asset('storage/' . $settings['site_favicon']) }}" alt="Favicon" style="height: 32px; width: 32px;">
                         @else
                             <img src="{{ asset('images/branding/favicon.svg') }}" alt="Favicon" style="height: 32px; width: 32px;">
@@ -243,7 +243,7 @@
 
             <div style="background: #F8FAFC; border: 1px solid var(--admin-border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
                 <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--admin-navy-surface); margin-bottom: 0.4rem;">OpenGraph Share Image (Preview WhatsApp, Facebook, LinkedIn)</label>
-                @if(!empty($settings['meta_og_image']) && file_exists(public_path('storage/' . $settings['meta_og_image'])))
+                @if(!empty($settings['meta_og_image']) && (file_exists(public_path('storage/' . $settings['meta_og_image'])) || file_exists(storage_path('app/public/' . $settings['meta_og_image']))))
                     <div style="margin-bottom: 0.75rem; max-width: 240px; border-radius: 8px; overflow: hidden; border: 1px solid var(--admin-border);">
                         <img src="{{ asset('storage/' . $settings['meta_og_image']) }}" alt="OG Image" style="width: 100%; height: auto;">
                     </div>

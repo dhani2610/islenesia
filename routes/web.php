@@ -52,6 +52,19 @@ Route::post('/inquiry/widget', [InquiryController::class, 'storeWidget'])->name(
 // Dynamic Anti-Bot Captcha Challenge
 Route::get('/captcha/refresh', [CaptchaController::class, 'refresh'])->name('captcha.refresh');
 
+// Storage Media Fallback (Provides seamless file serving on shared hosting where symlink() is disabled)
+Route::get('/storage/{path}', function (string $path) {
+    $filePath = storage_path('app/public/' . $path);
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+    $mime = mime_content_type($filePath) ?: 'application/octet-stream';
+    return response()->file($filePath, [
+        'Content-Type' => $mime,
+        'Cache-Control' => 'public, max-age=86400',
+    ]);
+})->where('path', '.*')->name('storage.fallback');
+
 
 /*
 |--------------------------------------------------------------------------

@@ -56,12 +56,12 @@
                         </div>
 
                         <div style="display: flex; gap: 1rem; align-items: flex-start;">
-                            <div style="width: 44px; height: 44px; background: rgba(16, 185, 129, 0.15); color: #059669; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+                            <div style="width: 44px; height: 44px; background: rgba(212, 175, 55, 0.15); color: var(--gold-dark); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; border: 1px solid rgba(212, 175, 55, 0.3);">
                                 <i class="fa-brands fa-whatsapp"></i>
                             </div>
                             <div>
                                 <h4 style="font-size: 0.925rem; color: var(--navy-primary); margin-bottom: 0.25rem;">WhatsApp Meja Ekspor</h4>
-                                <a href="javascript:void(0)" onclick="openWhatsAppModal('buyer')" style="font-size: 0.875rem; color: #059669; font-weight: 700;">{{ $contact['phone'] }}</a>
+                                <a href="javascript:void(0)" onclick="openWhatsAppModal('buyer')" style="font-size: 0.875rem; color: var(--navy-primary); font-weight: 700;">{{ $contact['phone'] }}</a>
                             </div>
                         </div>
                     </div>
