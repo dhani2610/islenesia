@@ -8,6 +8,8 @@ use App\Models\Testimonial;
 use App\Models\Faq;
 use App\Models\Setting;
 use App\Models\Slider;
+use App\Models\Client;
+use App\Models\Partner;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -39,6 +41,14 @@ class HomeController extends Controller
             ->orderBy('sort_order', 'asc')
             ->get();
 
+        $clients = Client::where('is_active', true)
+            ->orderBy('sort_order', 'asc')
+            ->get();
+
+        $partners = Partner::where('is_active', true)
+            ->orderBy('sort_order', 'asc')
+            ->get();
+
         $stats = [
             'countries' => Setting::get('exported_countries_count', '28+'),
             'tons' => Setting::get('metric_tons_exported', '5,400+'),
@@ -46,7 +56,7 @@ class HomeController extends Controller
             'satisfaction' => Setting::get('buyer_satisfaction', '99.4%'),
         ];
 
-        return view('pages.home', compact('products', 'testimonials', 'latestPosts', 'stats', 'faqs', 'sliders'));
+        return view('pages.home', compact('products', 'testimonials', 'latestPosts', 'stats', 'faqs', 'sliders', 'clients', 'partners'));
     }
 }
 

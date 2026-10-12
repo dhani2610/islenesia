@@ -22,7 +22,22 @@ class SliderController extends Controller
                 ->addIndexColumn()
                 ->addColumn('image_preview', function ($slider) {
                     $src = htmlspecialchars($slider->image_url, ENT_QUOTES, 'UTF-8');
-                    return '<img src="' . $src . '" class="table-thumb" style="width: 100px; height: 55px; border-radius: 8px; object-fit: cover;" alt="Slide Preview">';
+                    $badge = $slider->type === 'video' 
+                        ? '<span style="position:absolute; bottom:4px; right:4px; background:#DC2626; color:#FFF; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px;"><i class="fa-brands fa-youtube"></i> Video</span>' 
+                        : '<span style="position:absolute; bottom:4px; right:4px; background:#0F172A; color:#FFF; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px;"><i class="fa-regular fa-image"></i> Foto</span>';
+
+                    return '<div style="position:relative; width:110px; height:60px; display:inline-block;">
+                                <img src="' . $src . '" class="table-thumb" style="width: 100%; height: 100%; border-radius: 8px; object-fit: cover;" alt="Slide Preview">
+                                ' . $badge . '
+                            </div>';
+                })
+                ->addColumn('title_display', function ($slider) {
+                    $title = $slider->title ? htmlspecialchars($slider->title, ENT_QUOTES, 'UTF-8') : '<span style="color:#94a3b8; font-style:italic;">(Visual Banner)</span>';
+                    if ($slider->type === 'video') {
+                        $yt = htmlspecialchars($slider->youtube_url ?? '', ENT_QUOTES, 'UTF-8');
+                        return '<div><strong>' . $title . '</strong><div style="font-size:0.75rem; color:#DC2626; margin-top:2px;"><i class="fa-brands fa-youtube"></i> ' . ($yt ?: 'YouTube Video') . '</div></div>';
+                    }
+                    return '<div><strong>' . $title . '</strong><div style="font-size:0.75rem; color:#64748B; margin-top:2px;"><i class="fa-regular fa-image"></i> Gambar / Foto Banner</div></div>';
                 })
                 ->addColumn('status_badge', function ($slider) {
                     return $slider->is_active 
@@ -50,7 +65,7 @@ class SliderController extends Controller
                         </div>
                     ';
                 })
-                ->rawColumns(['image_preview', 'status_badge', 'action'])
+                ->rawColumns(['image_preview', 'title_display', 'status_badge', 'action'])
                 ->make(true);
         }
 
@@ -63,7 +78,7 @@ class SliderController extends Controller
      */
     public function create()
     {
-        $nextOrder = Slider::max('sort_order') + 1;
+        $nextOrder = (Slider::max('sort_order') ?? 0) + 1;
         return view('admin.sliders.create', compact('nextOrder'));
     }
 
@@ -74,15 +89,22 @@ class SliderController extends Controller
     {
         $validated = $request->validate([
             'title' => 'nullable|string|max:150',
-            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'type' => 'required|in:image,video',
+            'youtube_url' => 'required_if:type,video|nullable|string|max:255',
+            'image' => 'required_if:type,image|nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'sort_order' => 'required|integer|min:0',
             'is_active' => 'nullable|boolean',
         ]);
 
-        $imagePath = $request->file('image')->store('sliders', 'public');
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('sliders', 'public');
+        }
 
         Slider::create([
             'title' => $validated['title'] ?? null,
+            'type' => $validated['type'],
+            'youtube_url' => $validated['youtube_url'] ?? null,
             'image' => $imagePath,
             'sort_order' => $validated['sort_order'],
             'is_active' => $request->has('is_active'),
@@ -106,6 +128,8 @@ class SliderController extends Controller
     {
         $validated = $request->validate([
             'title' => 'nullable|string|max:150',
+            'type' => 'required|in:image,video',
+            'youtube_url' => 'required_if:type,video|nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'sort_order' => 'required|integer|min:0',
             'is_active' => 'nullable|boolean',
@@ -113,13 +137,14 @@ class SliderController extends Controller
 
         $data = [
             'title' => $validated['title'] ?? null,
+            'type' => $validated['type'],
+            'youtube_url' => $validated['youtube_url'] ?? null,
             'sort_order' => $validated['sort_order'],
             'is_active' => $request->has('is_active'),
         ];
 
         if ($request->hasFile('image')) {
-            // Delete old image if stored locally
-            if (!str_starts_with($slider->image, 'http') && Storage::disk('public')->exists($slider->image)) {
+            if (!empty($slider->image) && !str_starts_with($slider->image, 'http') && Storage::disk('public')->exists($slider->image)) {
                 Storage::disk('public')->delete($slider->image);
             }
             $data['image'] = $request->file('image')->store('sliders', 'public');
@@ -135,7 +160,7 @@ class SliderController extends Controller
      */
     public function destroy(Slider $slider)
     {
-        if (!str_starts_with($slider->image, 'http') && Storage::disk('public')->exists($slider->image)) {
+        if (!empty($slider->image) && !str_starts_with($slider->image, 'http') && Storage::disk('public')->exists($slider->image)) {
             Storage::disk('public')->delete($slider->image);
         }
 

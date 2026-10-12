@@ -912,6 +912,24 @@
                 </a>
             </li>
 
+            <li class="menu-item {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.clients.index') }}">
+                    <div style="display:flex; align-items:center; gap:0.6rem;">
+                        <span class="icon-wrap"><i class="fa-solid fa-handshake"></i></span>
+                        <span>Klien Kami (Our Clients)</span>
+                    </div>
+                </a>
+            </li>
+
+            <li class="menu-item {{ request()->routeIs('admin.partners.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.partners.index') }}">
+                    <div style="display:flex; align-items:center; gap:0.6rem;">
+                        <span class="icon-wrap"><i class="fa-solid fa-building-shield"></i></span>
+                        <span>Partner & Mitra (Our Partners)</span>
+                    </div>
+                </a>
+            </li>
+
             <li class="menu-header">Sistem & SEO</li>
             <li class="menu-item {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
                 <a href="{{ route('admin.settings.index') }}">

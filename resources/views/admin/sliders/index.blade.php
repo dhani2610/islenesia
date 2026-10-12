@@ -56,7 +56,7 @@
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                 { data: 'image_preview', name: 'image', orderable: false, searchable: false },
-                { data: 'title', name: 'title', defaultContent: '<span style="color:#94a3b8; font-style:italic;">(Tanpa teks - Murni Visual)</span>' },
+                { data: 'title_display', name: 'title', defaultContent: '<span style="color:#94a3b8; font-style:italic;">(Visual Banner)</span>' },
                 { data: 'sort_order', name: 'sort_order', className: 'text-center' },
                 { data: 'status_badge', name: 'is_active', className: 'text-center' },
                 { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center' }

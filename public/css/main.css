@@ -1677,3 +1677,260 @@ body > .skiptranslate:first-child {
     font-size: 0.775rem;
   }
 }
+
+/* ==========================================================================
+   Footer Custom Logo Badge
+   ========================================================================== */
+.footer-brand-link {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  text-decoration: none;
+}
+.footer-logo-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  padding: 0.45rem 0.95rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.footer-logo-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+.footer-logo-badge img {
+  height: 48px;
+  max-height: 52px;
+  max-width: 210px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* ==========================================================================
+   Hero Video Slide Styles (YouTube Autoplay Background)
+   ========================================================================== */
+.hero-slide-video {
+  background: #040A17;
+  overflow: hidden;
+}
+.video-iframe-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video-iframe-container iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 112vw;
+  height: 63vw; /* 16:9 extra ratio buffer to crop YouTube UI */
+  min-width: 177.78%;
+  min-height: 100%;
+  border: none;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   1-Row Auto-Slide Marquee Sections (Our Clients & Our Partners)
+   ========================================================================== */
+.trust-marquee-section {
+  padding: 3.5rem 0 3.25rem;
+  position: relative;
+  overflow: hidden;
+}
+.trust-marquee-clients {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+  border-bottom: 1px solid var(--slate-border);
+}
+.trust-marquee-partners {
+  background: #0B192C; /* Dark Navy for high contrast & authority */
+  color: #FFFFFF;
+  border-top: 2px solid rgba(212, 175, 55, 0.3);
+  border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+}
+
+.marquee-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+.marquee-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  margin-bottom: 0.6rem;
+}
+.trust-marquee-clients .marquee-badge {
+  background: rgba(212, 175, 55, 0.12);
+  color: #927218;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+.trust-marquee-partners .marquee-badge {
+  background: rgba(212, 175, 55, 0.2);
+  color: var(--gold-primary);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+}
+
+.marquee-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+.trust-marquee-clients .marquee-title {
+  color: var(--navy-deep);
+}
+.trust-marquee-partners .marquee-title {
+  color: #FFFFFF;
+}
+
+.marquee-subtitle {
+  font-size: 0.9rem;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.trust-marquee-clients .marquee-subtitle {
+  color: #64748B;
+}
+.trust-marquee-partners .marquee-subtitle {
+  color: #94A3B8;
+}
+
+.marquee-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 0.75rem 0;
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 1.5rem;
+  animation: marqueeScroll 32s linear infinite;
+}
+
+.marquee-track-reverse {
+  animation: marqueeScrollReverse 36s linear infinite;
+}
+
+.marquee-wrapper:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marqueeScrollReverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.marquee-card {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.85rem 1.35rem;
+  border-radius: 14px;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.trust-marquee-clients .marquee-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+}
+.trust-marquee-clients .marquee-card:hover {
+  border-color: var(--gold-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.18);
+}
+
+.trust-marquee-partners .marquee-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.trust-marquee-partners .marquee-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--gold-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.25);
+}
+
+.marquee-logo-box {
+  width: 90px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.trust-marquee-partners .marquee-logo-box {
+  background: #FFFFFF;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+.marquee-logo-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: filter 0.25s ease;
+}
+
+.marquee-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.marquee-name {
+  font-weight: 700;
+  font-size: 0.925rem;
+  white-space: nowrap;
+}
+.trust-marquee-clients .marquee-name {
+  color: var(--navy-deep);
+}
+.trust-marquee-partners .marquee-name {
+  color: #FFFFFF;
+}
+
+.marquee-sub {
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.trust-marquee-clients .marquee-sub {
+  color: #64748B;
+}
+.trust-marquee-partners .marquee-sub {
+  color: var(--gold-primary);
+}
+

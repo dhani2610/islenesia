@@ -124,6 +124,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Hero Sliders (Dynamic CRUD)
     Route::resource('sliders', \App\Http\Controllers\Admin\SliderController::class)->except(['show']);
 
+    // Our Clients & Partners CMS
+    Route::resource('clients', \App\Http\Controllers\Admin\ClientController::class)->except(['show']);
+    Route::resource('partners', \App\Http\Controllers\Admin\PartnerController::class)->except(['show']);
+
     // Settings (Web Identity, Contacts, Dynamic Social Media, SEO, About Us Content)
     Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [AdminSettingController::class, 'update'])->name('settings.update');

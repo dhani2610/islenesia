@@ -140,7 +140,7 @@
     }
 </style>
 
-<!-- Top Hero Image Slider (Pure Visual, Responsive, No Text Overlays) -->
+<!-- Top Hero Image / Video Slider (Dynamic Images & YouTube Background Autoplay) -->
 <section class="hero-slider-section">
     <div class="container">
         <div class="hero-slider-wrapper" id="homeHeroSlider">
@@ -149,20 +149,39 @@
                     $displaySlides = [];
                     if (isset($sliders) && $sliders->count() > 0) {
                         foreach ($sliders as $s) {
-                            $displaySlides[] = $s->image_url;
+                            $displaySlides[] = [
+                                'type' => $s->type ?? 'image',
+                                'image_url' => $s->image_url,
+                                'youtube_embed_url' => $s->youtube_embed_url,
+                                'youtube_id' => $s->youtube_id,
+                                'title' => $s->title ?? 'Hero Slide',
+                            ];
                         }
                     } else {
                         $displaySlides = [
-                            'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=1920&auto=format&fit=crop',
-                            'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1920&auto=format&fit=crop',
-                            'https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=1920&auto=format&fit=crop',
+                            ['type' => 'image', 'image_url' => 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=1920&auto=format&fit=crop', 'youtube_embed_url' => null, 'title' => 'Komoditas Premium'],
+                            ['type' => 'image', 'image_url' => 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1920&auto=format&fit=crop', 'youtube_embed_url' => null, 'title' => 'Pengapalan Global'],
+                            ['type' => 'image', 'image_url' => 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=1920&auto=format&fit=crop', 'youtube_embed_url' => null, 'title' => 'Gudang & Sortir'],
                         ];
                     }
                     $slideCount = count($displaySlides);
                 @endphp
-                @foreach($displaySlides as $idx => $imgUrl)
-                    <div class="hero-slide {{ $idx === 0 ? 'active' : '' }}" data-slide="{{ $idx }}">
-                        <img src="{{ $imgUrl }}" alt="Banner Slide {{ $idx + 1 }}" loading="{{ $idx === 0 ? 'eager' : 'lazy' }}">
+                @foreach($displaySlides as $idx => $slideItem)
+                    <div class="hero-slide {{ $slideItem['type'] === 'video' ? 'hero-slide-video' : '' }} {{ $idx === 0 ? 'active' : '' }}" data-slide="{{ $idx }}" data-type="{{ $slideItem['type'] }}">
+                        @if($slideItem['type'] === 'video' && !empty($slideItem['youtube_embed_url']))
+                            <div class="video-iframe-container">
+                                <iframe 
+                                    src="{{ $slideItem['youtube_embed_url'] }}" 
+                                    title="{{ $slideItem['title'] }}"
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                    allowfullscreen
+                                    loading="{{ $idx === 0 ? 'eager' : 'lazy' }}">
+                                </iframe>
+                            </div>
+                        @else
+                            <img src="{{ $slideItem['image_url'] }}" alt="{{ $slideItem['title'] }}" loading="{{ $idx === 0 ? 'eager' : 'lazy' }}">
+                        @endif
                     </div>
                 @endforeach
             </div>
@@ -178,7 +197,7 @@
 
                 <!-- Slider Dot Indicators -->
                 <div class="slider-dots-bar">
-                    @foreach($displaySlides as $idx => $imgUrl)
+                    @foreach($displaySlides as $idx => $slideItem)
                         <button type="button" class="dot {{ $idx === 0 ? 'active' : '' }}" onclick="goToHeroSlide({{ $idx }})" aria-label="Slide {{ $idx + 1 }}"></button>
                     @endforeach
                 </div>
@@ -238,6 +257,91 @@
     </div>
 </section>
 
+<!-- Section 1: Our Global Clients (1-Row Infinite Auto-Slide Marquee) -->
+<section class="trust-marquee-section trust-marquee-clients">
+    <div class="container">
+        <div class="marquee-header">
+            <div class="marquee-badge">
+                <i class="fa-solid fa-earth-americas"></i>
+                <span>Our Global Buyers & Importers</span>
+            </div>
+            <h2 class="marquee-title">Jaringan Klien & Importir Global</h2>
+            <p class="marquee-subtitle">
+                Dipercaya oleh puluhan korporasi manufaktur pangan, industri ekstraksi, dan distributor grosir komoditas di lebih dari 28 negara.
+            </p>
+        </div>
+    </div>
+
+    <div class="marquee-wrapper">
+        <div class="marquee-track">
+            @php
+                $clientList = $clients ?? collect();
+                $defaultClients = [
+                    ['name' => 'Nordic Bio Imports GmbH', 'country' => 'Hamburg, Germany'],
+                    ['name' => 'Shanghai Agri Trading Corp', 'country' => 'Shanghai, China'],
+                    ['name' => 'Yamato Spices Ltd', 'country' => 'Osaka, Japan'],
+                    ['name' => 'Rotterdam Port Foods BV', 'country' => 'Rotterdam, Netherlands'],
+                    ['name' => 'Al-Maktoum Global Commodity', 'country' => 'Dubai, UAE'],
+                    ['name' => 'Antwerp Cacao & Coffee SA', 'country' => 'Antwerp, Belgium'],
+                    ['name' => 'Pacific Rim Botanicals Inc', 'country' => 'California, USA'],
+                ];
+            @endphp
+
+            @if($clientList->count() > 0)
+                {{-- Loop twice for infinite scroll --}}
+                @foreach($clientList as $client)
+                    <div class="marquee-card">
+                        <div class="marquee-logo-box">
+                            <img src="{{ $client->logo_url }}" alt="{{ $client->name }}" loading="lazy">
+                        </div>
+                        <div class="marquee-info">
+                            <span class="marquee-name">{{ $client->name }}</span>
+                            @if(!empty($client->country_or_type))
+                                <span class="marquee-sub"><i class="fa-solid fa-location-dot" style="font-size:0.65rem;"></i> {{ $client->country_or_type }}</span>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+                @foreach($clientList as $client)
+                    <div class="marquee-card">
+                        <div class="marquee-logo-box">
+                            <img src="{{ $client->logo_url }}" alt="{{ $client->name }}" loading="lazy">
+                        </div>
+                        <div class="marquee-info">
+                            <span class="marquee-name">{{ $client->name }}</span>
+                            @if(!empty($client->country_or_type))
+                                <span class="marquee-sub"><i class="fa-solid fa-location-dot" style="font-size:0.65rem;"></i> {{ $client->country_or_type }}</span>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                @foreach($defaultClients as $c)
+                    <div class="marquee-card">
+                        <div class="marquee-logo-box" style="background:#F1F5F9; border-radius:8px;">
+                            <i class="fa-solid fa-building-wheat text-gold" style="font-size:1.5rem; color:#D4AF37;"></i>
+                        </div>
+                        <div class="marquee-info">
+                            <span class="marquee-name">{{ $c['name'] }}</span>
+                            <span class="marquee-sub"><i class="fa-solid fa-location-dot" style="font-size:0.65rem;"></i> {{ $c['country'] }}</span>
+                        </div>
+                    </div>
+                @endforeach
+                @foreach($defaultClients as $c)
+                    <div class="marquee-card">
+                        <div class="marquee-logo-box" style="background:#F1F5F9; border-radius:8px;">
+                            <i class="fa-solid fa-building-wheat text-gold" style="font-size:1.5rem; color:#D4AF37;"></i>
+                        </div>
+                        <div class="marquee-info">
+                            <span class="marquee-name">{{ $c['name'] }}</span>
+                            <span class="marquee-sub"><i class="fa-solid fa-location-dot" style="font-size:0.65rem;"></i> {{ $c['country'] }}</span>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+        </div>
+    </div>
+</section>
 
 <!-- Section: Featured Products / Commodities -->
 <section class="section">
@@ -391,6 +495,92 @@
                 <h3>Pemberdayaan Petani Berkelanjutan</h3>
                 <p>Kemitraan etis yang menguntungkan petani, menjaga kelestarian tanah, serta memastikan keaslian asal komoditas (traceability).</p>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 2: Our Strategic Partners (1-Row Infinite Auto-Slide Marquee) -->
+<section class="trust-marquee-section trust-marquee-partners">
+    <div class="container">
+        <div class="marquee-header">
+            <div class="marquee-badge">
+                <i class="fa-solid fa-handshake-simple"></i>
+                <span>Strategic Ecosystem & Alliances</span>
+            </div>
+            <h2 class="marquee-title">Partner & Mitra Strategis Kami</h2>
+            <p class="marquee-subtitle">
+                Berkolaborasi dengan lembaga pengujian mutu terakreditasi internasional, perusahaan logistik samudra, dan asosiasi petani nusantara.
+            </p>
+        </div>
+    </div>
+
+    <div class="marquee-wrapper">
+        <div class="marquee-track marquee-track-reverse">
+            @php
+                $partnerList = $partners ?? collect();
+                $defaultPartners = [
+                    ['name' => 'Sucofindo Indonesia', 'category' => 'Laboratorium & Sertifikasi Mutu'],
+                    ['name' => 'Karantina Pertanian RI', 'category' => 'Phytosanitary Inspection'],
+                    ['name' => 'Maersk Ocean Line', 'category' => 'Mitra Logistik Kontainer Global'],
+                    ['name' => 'SGS International', 'category' => 'Inspeksi Kualitas Independen'],
+                    ['name' => 'Gabungan Koperasi Petani', 'category' => 'Rantai Pasok Tani Berkelanjutan'],
+                    ['name' => 'Kamar Dagang Indonesia', 'category' => 'Fasilitator Ekspor Internasional'],
+                    ['name' => 'Halal Certification Board', 'category' => 'Jaminan Standar Higienitas'],
+                ];
+            @endphp
+
+            @if($partnerList->count() > 0)
+                @foreach($partnerList as $partner)
+                    <div class="marquee-card">
+                        <div class="marquee-logo-box">
+                            <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" loading="lazy">
+                        </div>
+                        <div class="marquee-info">
+                            <span class="marquee-name">{{ $partner->name }}</span>
+                            @if(!empty($partner->category))
+                                <span class="marquee-sub"><i class="fa-solid fa-certificate" style="font-size:0.65rem;"></i> {{ $partner->category }}</span>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+                {{-- Loop twice for seamless infinite marquee scroll --}}
+                @foreach($partnerList as $partner)
+                    <div class="marquee-card">
+                        <div class="marquee-logo-box">
+                            <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" loading="lazy">
+                        </div>
+                        <div class="marquee-info">
+                            <span class="marquee-name">{{ $partner->name }}</span>
+                            @if(!empty($partner->category))
+                                <span class="marquee-sub"><i class="fa-solid fa-certificate" style="font-size:0.65rem;"></i> {{ $partner->category }}</span>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                @foreach($defaultPartners as $p)
+                    <div class="marquee-card">
+                        <div class="marquee-logo-box">
+                            <i class="fa-solid fa-shield-halved text-gold" style="font-size:1.5rem; color:#D4AF37;"></i>
+                        </div>
+                        <div class="marquee-info">
+                            <span class="marquee-name">{{ $p['name'] }}</span>
+                            <span class="marquee-sub"><i class="fa-solid fa-certificate" style="font-size:0.65rem;"></i> {{ $p['category'] }}</span>
+                        </div>
+                    </div>
+                @endforeach
+                @foreach($defaultPartners as $p)
+                    <div class="marquee-card">
+                        <div class="marquee-logo-box">
+                            <i class="fa-solid fa-shield-halved text-gold" style="font-size:1.5rem; color:#D4AF37;"></i>
+                        </div>
+                        <div class="marquee-info">
+                            <span class="marquee-name">{{ $p['name'] }}</span>
+                            <span class="marquee-sub"><i class="fa-solid fa-certificate" style="font-size:0.65rem;"></i> {{ $p['category'] }}</span>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
         </div>
     </div>
 </section>
@@ -613,7 +803,7 @@
         });
 
         if (sliderInterval) {
-            clearInterval(sliderInterval);
+            clearTimeout(sliderInterval);
             startSliderTimer();
         }
     };
@@ -627,19 +817,22 @@
     };
 
     function startSliderTimer() {
-        if (sliderInterval) clearInterval(sliderInterval);
+        if (sliderInterval) clearTimeout(sliderInterval);
         var slides = document.querySelectorAll('#homeHeroSlider .hero-slide');
         if (slides.length <= 1) return;
-        sliderInterval = setInterval(function() {
+        var activeSlide = slides[currentSlide];
+        var isVideo = activeSlide && activeSlide.getAttribute('data-type') === 'video';
+        var delay = isVideo ? 9000 : 4200;
+        sliderInterval = setTimeout(function() {
             window.nextHeroSlide();
-        }, 4200);
+        }, delay);
     }
 
     document.addEventListener('DOMContentLoaded', function() {
         var sliderWrapper = document.getElementById('homeHeroSlider');
         if (sliderWrapper) {
             sliderWrapper.addEventListener('mouseenter', function() {
-                if (sliderInterval) clearInterval(sliderInterval);
+                if (sliderInterval) clearTimeout(sliderInterval);
             });
             sliderWrapper.addEventListener('mouseleave', function() {
                 startSliderTimer();

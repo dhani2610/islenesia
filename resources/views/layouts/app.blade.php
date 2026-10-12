@@ -193,8 +193,14 @@
             <div class="footer-grid">
                 <!-- Brand Info -->
                 <div class="footer-brand">
-                    <a href="{{ route('home') }}" class="brand-logo">
-                        <img src="{{ asset('images/branding/logo.svg') }}" alt="Islenesia" style="filter: brightness(0) invert(1);">
+                    <a href="{{ route('home') }}" class="brand-logo footer-brand-link">
+                        @if(!empty($siteSettings['site_logo']) && (file_exists(public_path('storage/' . $siteSettings['site_logo'])) || file_exists(storage_path('app/public/' . $siteSettings['site_logo']))))
+                            <span class="footer-logo-badge">
+                                <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}" alt="{{ $siteSettings['site_name'] ?? 'Islenesia' }}" class="footer-custom-logo">
+                            </span>
+                        @else
+                            <img src="{{ asset('images/branding/logo.svg') }}" alt="Islenesia" style="filter: brightness(0) invert(1); height: 48px;">
+                        @endif
                     </a>
                     <p>
                         {{ $siteSettings['site_description'] ?? 'Agregator dan eksportir komoditas pertanian nusantara terkemuka dengan kontrol mutu laboratorium bersertifikasi dan kemitraan petani berkelanjutan.' }}
