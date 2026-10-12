@@ -957,6 +957,17 @@
                     </div>
                 </a>
             </li>
+
+            <li class="menu-header">Bantuan & Dokumen</li>
+            <li class="menu-item {{ request()->routeIs('admin.manual-book.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.manual-book.index') }}">
+                    <div style="display:flex; align-items:center; gap:0.6rem;">
+                        <span class="icon-wrap"><i class="fa-solid fa-book-bookmark"></i></span>
+                        <span>Buku Panduan (Manual)</span>
+                    </div>
+                    <span style="font-size:0.68rem; background:rgba(212,175,55,0.2); color:var(--admin-gold); padding:2px 7px; border-radius:999px; font-weight:700;">DOCS</span>
+                </a>
+            </li>
         </ul>
 
         <div class="sidebar-footer">

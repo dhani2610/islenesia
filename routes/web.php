@@ -140,4 +140,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Admin Users Management (CRUD)
     Route::get('users/data', [\App\Http\Controllers\Admin\AdminUserController::class, 'data'])->name('users.data');
     Route::resource('users', \App\Http\Controllers\Admin\AdminUserController::class);
+
+    // Interactive Manual Book & CMS Documentation
+    Route::get('/manual-book', [\App\Http\Controllers\Admin\ManualBookController::class, 'index'])->name('manual-book.index');
 });
