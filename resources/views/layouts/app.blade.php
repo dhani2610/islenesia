@@ -280,8 +280,8 @@
         </div>
     </footer>
 
-    @if(request()->routeIs('catalog.show'))
-    <!-- Interactive Floating WhatsApp Widget Button (Hanya tampil di detail produk) -->
+    @if(request()->routeIs('home', 'catalog.show') || request()->is('/'))
+    <!-- Interactive Floating WhatsApp Widget Button (Tampil di Beranda & Detail Produk) -->
     <div class="wa-floating-btn" onclick="openWhatsAppModal('buyer')" id="waFloatingBtn">
         <div class="wa-btn-icon">
             <div class="wa-pulse"></div>
@@ -332,9 +332,9 @@
                             <span>📦</span>
                             <span>Saya Buyer (Beli)</span>
                         </div>
-                        <div class="wa-role-tab" id="tabPetani" onclick="switchWaRole('petani')">
+                        <div class="wa-role-tab" id="tabPemasok" onclick="switchWaRole('pemasok')">
                             <span>🌿</span>
-                            <span>Saya Petani (Jual)</span>
+                            <span>Saya Pemasok (Jual)</span>
                         </div>
                     </div>
                     <input type="hidden" name="role" id="waRoleInput" value="buyer">
@@ -487,24 +487,25 @@
         /* WhatsApp Modal State & Actions */
         var waModal = document.getElementById('waModalBackdrop');
         var tabBuyer = document.getElementById('tabBuyer');
-        var tabPetani = document.getElementById('tabPetani');
+        var tabPemasok = document.getElementById('tabPemasok') || document.getElementById('tabPetani');
         var waRoleInput = document.getElementById('waRoleInput');
         var waInputMessage = document.getElementById('waInputMessage');
         window.currentProductName = '';
 
         var buyerPlaceholder = "Saya tertarik untuk membeli komoditas ekspor " + window.SITE_NAME + " (Vanili / Kratom / Kopi / Cengkeh). Mohon info spesifikasi teknis dan penawaran harga FOB/CIF.";
-        var petaniPlaceholder = "Saya petani / kelompok tani dari daerah, ingin mengajukan hasil panen komoditas ke agregator " + window.SITE_NAME + ".";
+        var pemasokPlaceholder = "Saya pemasok / supplier komoditas, ingin menawarkan pasokan hasil komoditas ke agregator " + window.SITE_NAME + ".";
 
         window.switchWaRole = function(role) {
+            if (role === 'petani' || role === 'seller') role = 'pemasok';
             if (waRoleInput) waRoleInput.value = role;
             if (role === 'buyer') {
                 if (tabBuyer) tabBuyer.classList.add('active');
-                if (tabPetani) tabPetani.classList.remove('active');
+                if (tabPemasok) tabPemasok.classList.remove('active');
                 if (waInputMessage) waInputMessage.value = buyerPlaceholder;
             } else {
-                if (tabPetani) tabPetani.classList.add('active');
+                if (tabPemasok) tabPemasok.classList.add('active');
                 if (tabBuyer) tabBuyer.classList.remove('active');
-                if (waInputMessage) waInputMessage.value = petaniPlaceholder;
+                if (waInputMessage) waInputMessage.value = pemasokPlaceholder;
             }
         };
 
@@ -655,9 +656,12 @@
                     window.refreshChatCaptcha();
                     return;
                 }
-                var phone = "{{ preg_replace('/[^0-9]/', '', $siteSettings['whatsapp_number'] ?? '6285161313914') }}";
+                var buyerPhone = "{{ preg_replace('/[^0-9]/', '', !empty($siteSettings['whatsapp_buyer']) ? $siteSettings['whatsapp_buyer'] : ($siteSettings['whatsapp_number'] ?? '6285161313914')) }}";
+                var pemasokPhone = "{{ preg_replace('/[^0-9]/', '', !empty($siteSettings['whatsapp_pemasok']) ? $siteSettings['whatsapp_pemasok'] : ($siteSettings['whatsapp_number'] ?? '6285161313914')) }}";
+                var currentRole = waRoleInput ? waRoleInput.value : 'buyer';
+                var targetPhone = (currentRole === 'buyer') ? buyerPhone : pemasokPhone;
                 var text = encodeURIComponent(waInputMessage ? waInputMessage.value : buyerPlaceholder);
-                window.open("https://api.whatsapp.com/send?phone=" + phone + "&text=" + text, '_blank');
+                window.open("https://api.whatsapp.com/send?phone=" + targetPhone + "&text=" + text, '_blank');
                 window.closeWhatsAppModal(null);
             })
             .finally(function() {

@@ -39,6 +39,8 @@ class SettingController extends Controller
             'email' => 'nullable|string|max:150',
             'phone' => 'nullable|string|max:100',
             'whatsapp_number' => 'nullable|string|max:50',
+            'whatsapp_buyer' => 'nullable|string|max:50',
+            'whatsapp_pemasok' => 'nullable|string|max:50',
             'address' => 'nullable|string',
             'maps_embed' => 'nullable|string',
             
@@ -144,7 +146,7 @@ class SettingController extends Controller
             'site_name', 'site_tagline', 'site_description', 'company_name',
             'company_established', 'exported_countries_count', 'metric_tons_exported',
             'partner_farmers_count', 'buyer_satisfaction', 'email', 'phone',
-            'whatsapp_number', 'address', 'maps_embed', 'social_instagram',
+            'whatsapp_number', 'whatsapp_buyer', 'whatsapp_pemasok', 'address', 'maps_embed', 'social_instagram',
             'social_facebook', 'social_tiktok', 'social_youtube', 'social_linkedin',
             'social_twitter', 'meta_title', 'meta_description', 'meta_keywords',
             'hero_badge', 'hero_title', 'hero_subtitle', 'loading_port',

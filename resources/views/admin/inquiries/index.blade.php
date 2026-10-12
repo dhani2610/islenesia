@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Manajemen Leads & Inquiries')
-@section('header_title', 'Leads Agregator (Buyer & Petani)')
+@section('header_title', 'Leads Agregator (Buyer & Pemasok)')
 
 @section('content')
 
@@ -18,8 +18,8 @@
             <button type="button" class="btn-admin" onclick="filterType('buyer')" style="font-size: 0.8rem; padding: 0.4rem 0.85rem; background: #DBEAFE; color: #1E40AF;">
                 <i class="fa-solid fa-box"></i> Buyer Saja
             </button>
-            <button type="button" class="btn-admin" onclick="filterType('petani')" style="font-size: 0.8rem; padding: 0.4rem 0.85rem; background: #D1FAE5; color: #065F46;">
-                <i class="fa-solid fa-seedling"></i> Petani Saja
+            <button type="button" class="btn-admin" onclick="filterType('pemasok')" style="font-size: 0.8rem; padding: 0.4rem 0.85rem; background: #D1FAE5; color: #065F46;">
+                <i class="fa-solid fa-truck-ramp-box"></i> Pemasok Saja
             </button>
         </div>
     </div>

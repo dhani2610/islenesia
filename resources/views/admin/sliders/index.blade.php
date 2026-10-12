@@ -5,13 +5,6 @@
 
 @section('content')
 
-@if(session('success'))
-    <div class="alert-box alert-success">
-        <i class="fa-solid fa-circle-check"></i>
-        <span>{{ session('success') }}</span>
-    </div>
-@endif
-
 <div class="admin-card">
     <div class="card-header-flex">
         <div>

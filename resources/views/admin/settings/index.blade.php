@@ -154,8 +154,37 @@
                     <input type="text" name="phone" value="{{ $settings['phone'] ?? '+62 851-6131-3914' }}" class="form-input" style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--admin-border); border-radius: 8px;">
                 </div>
                 <div>
-                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--admin-navy-surface); margin-bottom: 0.4rem;">Nomor WhatsApp Resmi (Target Chat) *</label>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--admin-navy-surface); margin-bottom: 0.4rem;">Nomor WhatsApp Utama (Default) *</label>
                     <input type="text" name="whatsapp_number" value="{{ $settings['whatsapp_number'] ?? '6285161313914' }}" placeholder="62812xxxx (tanpa tanda + atau spasi)" class="form-input" style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--admin-border); border-radius: 8px;">
+                </div>
+            </div>
+
+            <!-- Pengaturan WhatsApp Terpisah: Buyer vs Pemasok -->
+            <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <i class="fa-brands fa-whatsapp text-gold" style="font-size: 1.2rem; color: #10B981;"></i>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--admin-navy-surface); margin: 0;">Pengaturan WhatsApp Khusus (Buyer vs Pemasok)</h4>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--admin-muted); margin-bottom: 1rem;">
+                    Anda dapat membedakan nomor WhatsApp admin yang menangani <strong>Buyer (Pembeli Komoditas)</strong> dan <strong>Pemasok (Supplier / Penjual)</strong>. Jika dikosongkan, sistem akan otomatis menggunakan Nomor WhatsApp Utama di atas.
+                </p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #1E40AF; margin-bottom: 0.4rem;">
+                            <i class="fa-solid fa-box" style="margin-right: 0.3rem;"></i> Nomor WhatsApp Khusus Buyer (Beli)
+                        </label>
+                        <input type="text" name="whatsapp_buyer" value="{{ $settings['whatsapp_buyer'] ?? '' }}" placeholder="Contoh: 6281234567890 (kosongkan jika sama)" class="form-input" style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--admin-border); border-radius: 8px; background: #FFFFFF;">
+                        <span style="font-size: 0.72rem; color: #64748B; margin-top: 0.25rem; display: block;">Target tujuan saat pengunjung memilih tab "Saya Buyer (Beli)"</span>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #065F46; margin-bottom: 0.4rem;">
+                            <i class="fa-solid fa-truck-ramp-box" style="margin-right: 0.3rem;"></i> Nomor WhatsApp Khusus Pemasok (Jual)
+                        </label>
+                        <input type="text" name="whatsapp_pemasok" value="{{ $settings['whatsapp_pemasok'] ?? '' }}" placeholder="Contoh: 6289876543210 (kosongkan jika sama)" class="form-input" style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--admin-border); border-radius: 8px; background: #FFFFFF;">
+                        <span style="font-size: 0.72rem; color: #64748B; margin-top: 0.25rem; display: block;">Target tujuan saat pengunjung memilih tab "Saya Pemasok (Jual)"</span>
+                    </div>
                 </div>
             </div>
 

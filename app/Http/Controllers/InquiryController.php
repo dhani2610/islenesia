@@ -37,18 +37,22 @@ class InquiryController extends Controller
         }
 
         $validated = $request->validate([
-            'role' => 'required|in:buyer,petani',
+            'role' => 'required|in:buyer,pemasok,petani,seller',
             'name' => 'required|string|max:150',
             'whatsapp' => 'required|string|max:30',
             'message' => 'required|string|max:1000',
             'product_id' => 'nullable|exists:products,id',
         ]);
 
+        // Normalize role to buyer or pemasok
+        $role = in_array($validated['role'], ['pemasok', 'petani', 'seller']) ? 'pemasok' : 'buyer';
+        $isBuyer = ($role === 'buyer');
+
         // Consume captcha
         session()->forget('captcha_chat');
 
         $inquiry = Inquiry::create([
-            'type' => $validated['role'], // buyer or petani
+            'type' => $role,
             'name' => strip_tags($validated['name']),
             'company' => strip_tags($validated['name']),
             'whatsapp' => strip_tags($validated['whatsapp']),
@@ -58,11 +62,20 @@ class InquiryController extends Controller
             'status' => 'new',
         ]);
 
-        $adminWa = Setting::get('whatsapp_number', '6285161313914');
-        $adminWa = preg_replace('/[^0-9]/', '', $adminWa);
-        $siteName = Setting::get('site_name', 'Manunggaland');
+        // Separate target WhatsApp for Buyer vs Pemasok
+        if ($isBuyer) {
+            $targetWa = Setting::get('whatsapp_buyer') ?: Setting::get('whatsapp_number', '6285161313914');
+        } else {
+            $targetWa = Setting::get('whatsapp_pemasok') ?: Setting::get('whatsapp_number', '6285161313914');
+        }
 
-        $roleText = $validated['role'] === 'buyer' ? 'BUYER / PEMBELI' : 'PETANI / PEMASOK';
+        $targetWa = preg_replace('/[^0-9]/', '', $targetWa);
+        if (empty($targetWa)) {
+            $targetWa = '6285161313914';
+        }
+
+        $siteName = Setting::get('site_name', 'Manunggaland');
+        $roleText = $isBuyer ? 'BUYER / PEMBELI' : 'PEMASOK / SUPPLIER';
         
         $waMessage = "Halo Admin Agregator {$siteName},\n\n"
             . "Saya ingin terhubung dengan sistem {$siteName}:\n"
@@ -73,7 +86,7 @@ class InquiryController extends Controller
             . "{$inquiry->message}\n\n"
             . "*(Tercatat otomatis di Database Sistem Agregator {$siteName} - ID: #{$inquiry->id})*";
 
-        $redirectUrl = "https://api.whatsapp.com/send?phone={$adminWa}&text=" . urlencode($waMessage);
+        $redirectUrl = "https://api.whatsapp.com/send?phone={$targetWa}&text=" . urlencode($waMessage);
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([

@@ -843,7 +843,7 @@
                 <a href="{{ route('admin.inquiries.index') }}">
                     <div style="display:flex; align-items:center; gap:0.6rem;">
                         <span class="icon-wrap"><i class="fa-solid fa-comments"></i></span>
-                        <span>Leads (Buyer & Petani)</span>
+                        <span>Leads (Buyer & Pemasok)</span>
                     </div>
                 </a>
             </li>
@@ -1007,10 +1007,24 @@
 
         <main class="admin-content">
             @if(session('success'))
-                <div class="alert-box alert-success">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <span>{{ session('success') }}</span>
+                <div class="alert-box alert-success" id="adminFlashAlert" style="display:flex; align-items:center; justify-content:space-between;">
+                    <div style="display:flex; align-items:center; gap:0.6rem;">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>{{ session('success') }}</span>
+                    </div>
+                    <button type="button" onclick="this.closest('.alert-box').remove()" style="background:none; border:none; color:inherit; font-size:1.25rem; line-height:1; cursor:pointer; opacity:0.75; padding:0 0.35rem;" title="Tutup">&times;</button>
                 </div>
+                <script>
+                    setTimeout(function() {
+                        var el = document.getElementById('adminFlashAlert');
+                        if (el) {
+                            el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                            el.style.opacity = '0';
+                            el.style.transform = 'translateY(-6px)';
+                            setTimeout(function() { if (el) el.remove(); }, 500);
+                        }
+                    }, 4000);
+                </script>
             @endif
 
             @if(session('error'))

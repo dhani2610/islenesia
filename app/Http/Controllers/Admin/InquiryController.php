@@ -17,7 +17,12 @@ class InquiryController extends Controller
         $query = Inquiry::with('product')->select('inquiries.*');
 
         if ($request->filled('type')) {
-            $query->where('type', $request->query('type'));
+            $filterType = $request->query('type');
+            if ($filterType === 'pemasok') {
+                $query->whereIn('type', ['pemasok', 'petani']);
+            } else {
+                $query->where('type', $filterType);
+            }
         }
 
         return DataTables::of($query)
@@ -25,8 +30,8 @@ class InquiryController extends Controller
             ->addColumn('type_badge', function ($row) {
                 if ($row->type === 'buyer') {
                     return '<span class="badge-custom badge-buyer"><i class="fa-solid fa-box"></i> Buyer</span>';
-                } elseif ($row->type === 'petani') {
-                    return '<span class="badge-custom badge-petani"><i class="fa-solid fa-seedling"></i> Petani</span>';
+                } elseif (in_array($row->type, ['pemasok', 'petani', 'seller'])) {
+                    return '<span class="badge-custom badge-petani"><i class="fa-solid fa-truck-ramp-box"></i> Pemasok</span>';
                 }
                 return '<span class="badge-custom badge-general">Umum</span>';
             })

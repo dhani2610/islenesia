@@ -759,16 +759,16 @@
             {{ $siteSettings['cta_title'] ?? 'Siap Menghubungkan Kebutuhan Komoditas Anda dengan Sumber Terbaik?' }}
         </h2>
         <p style="color: #CBD5E1; font-size: 1.05rem; margin-bottom: 2.5rem;">
-            {!! !empty($siteSettings['cta_subtitle']) ? nl2br(e($siteSettings['cta_subtitle'])) : 'Baik Anda <strong>Buyer Internasional</strong> yang mencari kuota komoditas premium, maupun <strong>Petani Lokal</strong> yang ingin menjual hasil panen, sistem agregator ' . e($siteSettings['site_name'] ?? 'Manunggaland') . ' siap melayani.' !!}
+            {!! !empty($siteSettings['cta_subtitle']) ? nl2br(e($siteSettings['cta_subtitle'])) : 'Baik Anda <strong>Buyer Internasional</strong> yang mencari kuota komoditas premium, maupun <strong>Pemasok / Supplier</strong> yang ingin menawarkan pasokan komoditas, sistem agregator ' . e($siteSettings['site_name'] ?? 'Manunggaland') . ' siap melayani.' !!}
         </p>
         <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
             <button type="button" class="btn btn-gold btn-lg" onclick="openWhatsAppModal('buyer')">
-                <i class="fa-solid fa-box-check"></i>
+                <i class="fa-solid fa-boxes-packing"></i>
                 <span>Saya Buyer (Pesan Komoditas)</span>
             </button>
-            <button type="button" class="btn btn-outline-gold btn-lg" onclick="openWhatsAppModal('petani')">
-                <i class="fa-solid fa-tractor"></i>
-                <span>Saya Petani (Jual Hasil Panen)</span>
+            <button type="button" class="btn btn-outline-gold btn-lg" onclick="openWhatsAppModal('pemasok')">
+                <i class="fa-solid fa-truck-ramp-box"></i>
+                <span>Saya Pemasok (Jual Komoditas)</span>
             </button>
         </div>
     </div>
