@@ -59,7 +59,7 @@
                     </p>
                     <button type="button" class="btn btn-gold btn-lg" style="width: 100%; font-size: 1.05rem; font-weight: 700;" onclick="requestQuoteModal('{{ addslashes($product->name) }}', {{ $product->id }})">
                         <i class="fa-solid fa-file-invoice-dollar" style="font-size: 1.25rem;"></i>
-                        <span>Request a Quote (Harga, COA, Sampel & Ongkir)</span>
+                        <span>Request a Quote (WhatsApp / Email)</span>
                     </button>
                 </div>
 
@@ -122,9 +122,9 @@
                                     <a href="{{ route('catalog.show', $rel->slug) }}" class="btn btn-outline-navy btn-sm" style="flex: 1; text-align: center; justify-content: center; padding: 0.45rem 0.5rem;">
                                         <span>Detail</span>
                                     </a>
-                                    <button type="button" class="btn btn-gold btn-sm" onclick="requestQuoteModal('{{ addslashes($rel->name) }}', {{ $rel->id }})" style="flex: 1.5; justify-content: center; padding: 0.45rem 0.65rem;" title="Request a Quote (Harga, COA, Sampel & Ongkir)">
+                                    <button type="button" class="btn btn-gold btn-sm" onclick="requestQuoteModal('{{ addslashes($rel->name) }}', {{ $rel->id }})" style="flex: 1.5; justify-content: center; padding: 0.45rem 0.65rem;" title="Request a Quote Resmi (WhatsApp / Email)">
                                         <i class="fa-solid fa-file-invoice-dollar"></i>
-                                        <span>Request Quote</span>
+                                        <span>WhatsApp / Email</span>
                                     </button>
                                 </div>
                             </div>

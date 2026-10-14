@@ -47,13 +47,34 @@ class InquiryController extends Controller
                 ];
                 return $statusMap[$row->status] ?? $row->status;
             })
-            ->addColumn('action', function ($row) {
-                $phone = preg_replace('/[^0-9]/', '', $row->whatsapp);
-                $waBtn = '<a href="https://wa.me/' . $phone . '" target="_blank" class="table-btn-wa" title="Buka WhatsApp Langsung"><i class="fa-brands fa-whatsapp"></i> Chat</a>';
-                $deleteBtn = '<button type="button" class="table-btn-del" onclick="deleteInquiry(' . $row->id . ')" title="Hapus"><i class="fa-solid fa-trash"></i></button>';
-                return '<div class="action-btn-group">' . $waBtn . $deleteBtn . '</div>';
+            ->addColumn('contact_info', function ($row) {
+                $html = '';
+                if (!empty($row->whatsapp) && $row->whatsapp !== '-') {
+                    $html .= '<div style="margin-bottom: 2px;"><i class="fa-brands fa-whatsapp text-success"></i> ' . e($row->whatsapp) . '</div>';
+                }
+                if (!empty($row->email)) {
+                    $html .= '<div style="font-size: 0.8rem; color: #1D4ED8;"><i class="fa-regular fa-envelope"></i> ' . e($row->email) . '</div>';
+                }
+                if ($row->channel === 'email') {
+                    $html .= '<span style="display: inline-block; margin-top: 3px; font-size: 0.68rem; background: #EFF6FF; color: #1D4ED8; padding: 1px 6px; border-radius: 4px; font-weight: 700;">Via Email</span>';
+                } elseif ($row->channel === 'both') {
+                    $html .= '<span style="display: inline-block; margin-top: 3px; font-size: 0.68rem; background: #F3F4F6; color: #4B5563; padding: 1px 6px; border-radius: 4px; font-weight: 700;">WA + Email</span>';
+                }
+                return $html ?: '-';
             })
-            ->rawColumns(['type_badge', 'status_badge', 'action'])
+            ->addColumn('action', function ($row) {
+                $btns = '';
+                if (!empty($row->email)) {
+                    $btns .= '<a href="mailto:' . e($row->email) . '?subject=Re:%20Trade%20Inquiry%20Islenesia" class="table-btn-wa" style="background: #0B1B3D; color: #FFFFFF;" title="Balas via Email"><i class="fa-regular fa-envelope"></i> Email</a>';
+                }
+                if (!empty($row->whatsapp) && $row->whatsapp !== '-') {
+                    $phone = preg_replace('/[^0-9]/', '', $row->whatsapp);
+                    $btns .= '<a href="https://wa.me/' . $phone . '" target="_blank" class="table-btn-wa" title="Buka WhatsApp Langsung"><i class="fa-brands fa-whatsapp"></i> WA</a>';
+                }
+                $btns .= '<button type="button" class="table-btn-del" onclick="deleteInquiry(' . $row->id . ')" title="Hapus"><i class="fa-solid fa-trash"></i></button>';
+                return '<div class="action-btn-group">' . $btns . '</div>';
+            })
+            ->rawColumns(['type_badge', 'contact_info', 'status_badge', 'action'])
             ->make(true);
     }
 

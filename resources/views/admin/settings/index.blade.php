@@ -74,6 +74,10 @@
             <i class="fa-solid fa-chart-simple text-gold"></i>
             <span>Statistik Counter</span>
         </button>
+        <button type="button" class="settings-tab-btn" onclick="switchSettingTab('tab-smtp')">
+            <i class="fa-solid fa-envelope-open-text text-gold"></i>
+            <span>Email SMTP & Hosting</span>
+        </button>
     </div>
 
     <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
@@ -470,6 +474,128 @@
             </div>
         </div>
 
+        <!-- TAB 8: Email SMTP & cPanel Hosting -->
+        <div class="settings-tab-pane" id="tab-smtp">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h3 style="font-size: 1.15rem; color: var(--admin-navy-surface); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-solid fa-envelope-open-text text-gold"></i>
+                        <span>Pengaturan Email SMTP & Hosting (cPanel)</span>
+                    </h3>
+                    <p style="font-size: 0.85rem; color: var(--admin-muted); margin: 0;">
+                        Konfigurasi pengiriman email otomatis menggunakan akun email hosting cPanel (seperti <code>noreply@islenesia.com</code>).
+                    </p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.75rem; background: #F8FAFC; border: 1.5px solid var(--admin-border); padding: 0.5rem 1rem; border-radius: 10px;">
+                    <label style="font-size: 0.85rem; font-weight: 700; color: var(--admin-navy-surface); margin: 0; cursor: pointer;" for="smtp_active_toggle">
+                        Aktifkan Layanan Email SMTP:
+                    </label>
+                    <input type="hidden" name="smtp_active" value="0">
+                    <input type="checkbox" name="smtp_active" value="1" id="smtp_active_toggle" {{ ($settings['smtp_active'] ?? '1') == '1' ? 'checked' : '' }} style="width: 1.25rem; height: 1.25rem; accent-color: var(--admin-gold); cursor: pointer;">
+                </div>
+            </div>
+
+            <!-- cPanel Quick Info Banner -->
+            <div style="background: linear-gradient(135deg, rgba(11,27,61,0.04), rgba(212,175,55,0.08)); border: 1.5px solid rgba(212,175,55,0.35); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 2rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                    <i class="fa-solid fa-server text-gold" style="font-size: 1.25rem;"></i>
+                    <h4 style="font-size: 0.95rem; color: var(--admin-navy-surface); margin: 0; font-weight: 700;">Integrasi Email Hosting cPanel Resmi</h4>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--admin-navy-surface); line-height: 1.6; margin: 0;">
+                    Website ini terhubung langsung ke akun email hosting cPanel Anda. Setiap ada buyer (khususnya dari Eropa / luar negeri) yang mengajukan <strong>Request a Quote</strong> via Email, sistem akan otomatis:
+                </p>
+                <ul style="font-size: 0.825rem; color: var(--admin-muted); margin: 0.5rem 0 0 1.25rem; padding: 0; line-height: 1.6;">
+                    <li>Mengirimkan notifikasi lengkap data lead & inquiry ke <strong>Email Admin / Meja Ekspor</strong>.</li>
+                    <li>Mengirimkan <strong>Auto-Responder resmi dalam Bahasa Inggris</strong> (Trade Inquiry Acknowledgment) ke inbox email buyer, memastikan reputasi profesional dan respon instan 24 jam.</li>
+                </ul>
+            </div>
+
+            <!-- Server Settings Form Grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--admin-navy-surface); margin-bottom: 0.4rem;">Outgoing Mail Server (SMTP Host) *</label>
+                    <input type="text" name="smtp_host" value="{{ $settings['smtp_host'] ?? 'mail.islenesia.com' }}" class="form-input" style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--admin-border); border-radius: 8px;" placeholder="Contoh: mail.islenesia.com">
+                    <span style="font-size: 0.75rem; color: var(--admin-muted);">Biasanya berupa <code>mail.domainanda.com</code> atau hostname server cPanel.</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--admin-navy-surface); margin-bottom: 0.4rem;">SMTP Port *</label>
+                        <input type="number" name="smtp_port" value="{{ $settings['smtp_port'] ?? '465' }}" class="form-input" style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--admin-border); border-radius: 8px;" placeholder="465 / 587">
+                        <span style="font-size: 0.75rem; color: var(--admin-muted);">Port 465 (SSL) atau 587 (TLS).</span>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--admin-navy-surface); margin-bottom: 0.4rem;">Enkripsi Keamanan</label>
+                        <select name="smtp_encryption" class="form-input" style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--admin-border); border-radius: 8px;">
+                            <option value="ssl" {{ ($settings['smtp_encryption'] ?? 'ssl') === 'ssl' ? 'selected' : '' }}>SSL (Port 465 - Rekomendasi)</option>
+                            <option value="tls" {{ ($settings['smtp_encryption'] ?? '') === 'tls' ? 'selected' : '' }}>TLS (Port 587)</option>
+                            <option value="none" {{ ($settings['smtp_encryption'] ?? '') === 'none' ? 'selected' : '' }}>None (Tidak Enkripsi)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--admin-navy-surface); margin-bottom: 0.4rem;">Username SMTP (Email Akun cPanel) *</label>
+                    <input type="text" name="smtp_username" value="{{ $settings['smtp_username'] ?? 'noreply@islenesia.com' }}" class="form-input" style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--admin-border); border-radius: 8px;" placeholder="noreply@islenesia.com">
+                    <span style="font-size: 0.75rem; color: var(--admin-muted);">Alamat email lengkap yang terdaftar di Email Accounts cPanel.</span>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--admin-navy-surface); margin-bottom: 0.4rem;">Password Akun Email cPanel *</label>
+                    <div style="position: relative;">
+                        <input type="password" name="smtp_password" id="smtpPasswordInput" value="{{ $settings['smtp_password'] ?? '=}Wv#(oYPS)S#Y.2' }}" class="form-input" style="width: 100%; padding: 0.75rem 2.5rem 0.75rem 0.75rem; border: 1.5px solid var(--admin-border); border-radius: 8px;">
+                        <button type="button" onclick="toggleSmtpPassword()" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--admin-muted); cursor: pointer;" title="Lihat / Sembunyikan Password">
+                            <i class="fa-regular fa-eye" id="smtpPasswordEye"></i>
+                        </button>
+                    </div>
+                    <span style="font-size: 0.75rem; color: var(--admin-muted);">Password akun email yang dibuat di cPanel.</span>
+                </div>
+            </div>
+
+            <h4 style="font-size: 1rem; color: var(--admin-navy-surface); margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700;">Pengirim & Penerima Email</h4>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--admin-navy-surface); margin-bottom: 0.4rem;">Alamat Email Pengirim (From Address) *</label>
+                    <input type="email" name="mail_from_address" value="{{ $settings['mail_from_address'] ?? 'noreply@islenesia.com' }}" class="form-input" style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--admin-border); border-radius: 8px;" placeholder="noreply@islenesia.com">
+                    <span style="font-size: 0.75rem; color: var(--admin-muted);">Sebaiknya sama dengan username SMTP agar tidak ditolak filter spam.</span>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--admin-navy-surface); margin-bottom: 0.4rem;">Nama Pengirim (From Name) *</label>
+                    <input type="text" name="mail_from_name" value="{{ $settings['mail_from_name'] ?? 'Islenesia Agro Export Desk' }}" class="form-input" style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--admin-border); border-radius: 8px;" placeholder="Islenesia Agro Export Desk">
+                    <span style="font-size: 0.75rem; color: var(--admin-muted);">Nama pengirim yang tampil di kotak masuk buyer / penerima.</span>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--admin-navy-surface); margin-bottom: 0.4rem;">Target Email Penerima Notifikasi Inquiry Lead (Admin) *</label>
+                <input type="email" name="mail_receive_address" value="{{ $settings['mail_receive_address'] ?? 'noreply@islenesia.com' }}" class="form-input" style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--admin-border); border-radius: 8px;" placeholder="info@islenesia.com atau email pribadi Anda">
+                <span style="font-size: 0.75rem; color: var(--admin-muted);">Kemana notifikasi rincian inquiry lead pembeli/pemasok akan dikirimkan.</span>
+            </div>
+
+            <!-- Test Connection Box -->
+            <div style="background: #FFFFFF; border: 1.5px solid var(--admin-border); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; box-shadow: var(--shadow-sm);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <h4 style="font-size: 0.95rem; color: var(--admin-navy-surface); margin: 0; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-solid fa-paper-plane text-gold"></i>
+                        <span>Uji Coba Pengiriman Email (Test SMTP Connection)</span>
+                    </h4>
+                    <span style="font-size: 0.75rem; color: var(--admin-muted);">Uji langsung koneksi server email hosting</span>
+                </div>
+                <p style="font-size: 0.825rem; color: var(--admin-muted); margin-bottom: 1rem;">
+                    Masukkan alamat email tujuan untuk memastikan server cPanel berhasil terhubung dan mengirimkan pesan tanpa kendala:
+                </p>
+                <div style="display: flex; gap: 0.75rem; max-width: 550px;">
+                    <input type="email" id="testEmailInput" value="{{ $settings['mail_receive_address'] ?? 'noreply@islenesia.com' }}" placeholder="Ketik email tujuan test..." class="form-input" style="flex: 1; padding: 0.65rem 0.85rem; border: 1.5px solid var(--admin-border); border-radius: 8px; font-size: 0.875rem;">
+                    <button type="button" id="btnTestSmtp" onclick="sendTestSmtpEmail()" class="btn-admin btn-admin-navy" style="white-space: nowrap; padding: 0.65rem 1.25rem;">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Test Kirim Sekarang</span>
+                    </button>
+                </div>
+                <div id="testSmtpFeedback" style="display: none; margin-top: 1rem; padding: 0.85rem 1rem; border-radius: 8px; font-size: 0.85rem;"></div>
+            </div>
+        </div>
+
         <div style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--admin-border);">
             <button type="submit" class="btn-admin btn-admin-gold" style="padding: 0.85rem 2.5rem; font-size: 1rem;">
                 <i class="fa-solid fa-floppy-disk"></i>
@@ -487,6 +613,78 @@
         
         event.currentTarget.classList.add('active');
         $('#' + tabId).addClass('active');
+    }
+
+    function toggleSmtpPassword() {
+        var input = document.getElementById('smtpPasswordInput');
+        var eye = document.getElementById('smtpPasswordEye');
+        if (!input) return;
+        if (input.type === 'password') {
+            input.type = 'text';
+            if (eye) eye.className = 'fa-regular fa-eye-slash';
+        } else {
+            input.type = 'password';
+            if (eye) eye.className = 'fa-regular fa-eye';
+        }
+    }
+
+    function sendTestSmtpEmail() {
+        var btn = document.getElementById('btnTestSmtp');
+        var input = document.getElementById('testEmailInput');
+        var feedback = document.getElementById('testSmtpFeedback');
+        var email = input ? input.value.trim() : '';
+
+        if (!email) {
+            alert('Mohon masukkan email tujuan uji coba.');
+            return;
+        }
+
+        var origHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menghubungkan Server...';
+        
+        if (feedback) {
+            feedback.style.display = 'block';
+            feedback.style.background = '#EFF6FF';
+            feedback.style.color = '#1D4ED8';
+            feedback.style.border = '1px solid #BFDBFE';
+            feedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sedang melakukan handshake SMTP dan mengirimkan email uji coba ke <strong>' + email + '</strong>...';
+        }
+
+        fetch("{{ route('admin.settings.test-smtp') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ test_email: email })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.success) {
+                feedback.style.background = '#ECFDF5';
+                feedback.style.color = '#065F46';
+                feedback.style.border = '1px solid #A7F3D0';
+                feedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> ' + data.message;
+            } else {
+                feedback.style.background = '#FEF2F2';
+                feedback.style.color = '#991B1B';
+                feedback.style.border = '1px solid #FECACA';
+                feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> ' + data.message;
+            }
+        })
+        .catch(function(err) {
+            console.error(err);
+            feedback.style.background = '#FEF2F2';
+            feedback.style.color = '#991B1B';
+            feedback.style.border = '1px solid #FECACA';
+            feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Gagal menghubungi endpoint server. Pastikan koneksi internet stabil.';
+        })
+        .finally(function() {
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
+        });
     }
 </script>
 @endpush

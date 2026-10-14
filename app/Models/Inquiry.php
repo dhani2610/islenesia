@@ -19,6 +19,7 @@ class Inquiry extends Model
         'message',
         'product_id',
         'status', // 'new', 'contacted', 'deal', 'closed'
+        'channel', // 'whatsapp', 'email', 'both'
         'ip_address',
     ];
 

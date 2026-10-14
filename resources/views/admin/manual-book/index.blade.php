@@ -699,10 +699,15 @@
     </div>
 
     <div class="action-step-card">
-        <h5><span class="step-num">2</span> Cara Kerja Tombol "Request a Quote" di Halaman Produk</h5>
-        <p style="font-size: 0.875rem; color: #475569; line-height: 1.6;">
-            Ketika calon buyer mengklik tombol <strong>"Request a Quote"</strong> pada suatu produk, modal WhatsApp akan terbuka otomatis dengan pesan siap kirim yang menyebutkan nama produk tersebut secara spesifik serta meminta rincian: <em>1. Penawaran Harga (FOB/CIF), 2. Hasil Uji Lab COA, 3. Sampel Produk, 4. Biaya Ongkir Port-to-Port</em>. Pesan ini otomatis diarahkan ke <strong>Nomor WhatsApp Khusus Buyer</strong> yang telah diatur di Bab 2.
+        <h5><span class="step-num">2</span> Fitur Dual Channel "WhatsApp / Email" & Auto-Responder Bahasa Inggris untuk Buyer Eropa</h5>
+        <p style="font-size: 0.875rem; color: #475569; line-height: 1.6; margin-bottom: 0.75rem;">
+            Khusus pasar <strong>Eropa dan internasional</strong>, mayoritas buyer tidak menggunakan WhatsApp melainkan korespondensi resmi via <strong>Email Bisnis</strong>. Oleh karena itu, pada setiap kartu produk dan detail katalog, tombol ditampilkan dengan label <strong>"WhatsApp / Email"</strong>.
         </p>
+        <ul style="margin-left: 1.25rem; color: #475569; font-size: 0.875rem; line-height: 1.6;">
+            <li><strong>Jika Buyer memilih WhatsApp:</strong> Pesan penawaran harga FOB/CIF, COA lab, sampel, dan estimasi ongkir otomatis terbuka di WhatsApp Web / App terhubung ke nomor admin meja ekspor.</li>
+            <li><strong>Jika Buyer memilih Email:</strong> Buyer cukup menginput email perusahaannya. Sistem secara otomatis mengirimkan <strong>Email Auto-Responder resmi dalam Bahasa Inggris</strong> (<em>Trade Inquiry Acknowledgment</em>) ke inbox buyer dan meneruskan notifikasi lengkap lead ke email Admin.</li>
+            <li><strong>Pengaturan Server Email Hosting (cPanel):</strong> Dapat diatur dan diuji coba melalui menu <strong>Pengaturan Website ➔ Tab "Email SMTP & Hosting"</strong> dengan kredensial cPanel Anda (Port 465 SSL).</li>
+        </ul>
     </div>
 </div>
 

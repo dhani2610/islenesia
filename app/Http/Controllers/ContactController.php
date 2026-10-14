@@ -51,17 +51,20 @@ class ContactController extends Controller
             'type' => 'nullable|string|in:buyer,petani,general',
         ]);
 
-        Inquiry::create([
+        $inquiry = Inquiry::create([
             'type' => $validated['type'] ?? 'general',
             'name' => strip_tags($validated['name']),
             'company' => strip_tags($validated['company'] ?? ''),
             'email' => strip_tags($validated['email']),
             'whatsapp' => strip_tags($validated['whatsapp']),
             'subject' => strip_tags($validated['subject'] ?? 'Pesan dari Kontak Web'),
+            'channel' => 'both',
             'message' => strip_tags($validated['message']),
             'ip_address' => $request->ip(),
             'status' => 'new',
         ]);
+
+        \App\Services\MailConfigService::sendInquiryEmails($inquiry);
 
         return back()->with('success', "Terima kasih! Pesan dan kebutuhan Anda telah terhubung langsung ke Admin {$siteName}. Kami akan segera merespons melalui WhatsApp/Email.");
     }

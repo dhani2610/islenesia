@@ -34,24 +34,34 @@ class PageSpeedMiddleware
             return $response;
         }
 
-        // 1. Minify HTML (collapse multiple whitespace, strip redundant HTML comments)
-        $search = [
-            '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
-            '/[^\S ]+\</s',     // strip whitespaces before tags, except space
-            '/(\s)+/s',         // shorten multiple whitespace sequences
-            '/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/s', // delete comments except IE conditionals
-        ];
+        // 1. Minify HTML safely (protect script, style, pre, and textarea from whitespace destruction)
+        $placeholders = [];
+        $protectedContent = preg_replace_callback('/<(script|pre|textarea)\b[^>]*>.*?<\/\1>/si', function($matches) use (&$placeholders) {
+            $key = '___PROTECTED_PAGE_BLOCK_' . count($placeholders) . '___';
+            $placeholders[$key] = $matches[0];
+            return $key;
+        }, $content);
 
-        $replace = [
-            '>',
-            '<',
-            '\\1',
-            '',
-        ];
+        if ($protectedContent !== null) {
+            $search = [
+                '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
+                '/[^\S ]+\</s',     // strip whitespaces before tags, except space
+                '/(\s)+/s',         // shorten multiple whitespace sequences
+                '/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/s', // delete comments except IE conditionals
+            ];
 
-        $minified = preg_replace($search, $replace, $content);
-        if ($minified) {
-            $content = $minified;
+            $replace = [
+                '>',
+                '<',
+                '\\1',
+                '',
+            ];
+
+            $minified = preg_replace($search, $replace, $protectedContent);
+            if ($minified) {
+                // Restore protected blocks safely
+                $content = strtr($minified, $placeholders);
+            }
         }
 
         // 2. Apply Gzip Compression if client browser supports it

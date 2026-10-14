@@ -128,9 +128,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('clients', \App\Http\Controllers\Admin\ClientController::class)->except(['show']);
     Route::resource('partners', \App\Http\Controllers\Admin\PartnerController::class)->except(['show']);
 
-    // Settings (Web Identity, Contacts, Dynamic Social Media, SEO, About Us Content)
+    // Settings (Web Identity, Contacts, Dynamic Social Media, SEO, About Us Content, Email SMTP)
     Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [AdminSettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings/test-smtp', [AdminSettingController::class, 'testSmtp'])->name('settings.test-smtp');
 
     // Profile & Password
     Route::get('/profile', [AdminProfileController::class, 'edit'])->name('profile.edit');

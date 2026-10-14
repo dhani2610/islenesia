@@ -68,6 +68,17 @@ class DatabaseSeeder extends Seeder
             'about_story' => 'Manunggaland didirikan dengan tekad kuat untuk mengangkat komoditas pertanian terbaik Indonesia ke panggung internasional. Beroperasi sebagai agregator terpercaya, kami bekerja sama langsung dengan lebih dari 1.400 petani mitra di berbagai sentra perkebunan nusantara—mulai dari Aceh, Jawa, Maluku, hingga Papua. Dengan memangkas rantai perantara yang tidak efisien, kami memastikan petani memperoleh harga yang adil serta pembeli internasional (Eropa, China, Asia Timur, dan Amerika) mendapatkan kepastian pasokan, transparansi mutu laboratorium, dan harga yang sangat kompetitif.',
             'about_vision' => 'Menjadi gerbang utama dan agregator komoditas pertanian terkemuka dari Indonesia yang diakui secara global atas integritas, kualitas mutu tanpa kompromi, dan keberlanjutan rantai pasok dari petani ke industri dunia.',
             'about_mission' => "1. Menjamin standar kualitas ekspor tertinggi dengan pengawasan mutu laboratorium bersertifikasi (Phytosanitary, Lab Purity, Moisture Control).\n2. Membangun ekosistem kemitraan petani yang adil, berkelanjutan, dan didukung transfer teknologi pasca-panen.\n3. Memberikan kepastian logistik, kepatuhan regulasi kepabeanan, dan keamanan transaksi bagi pembeli di Eropa, China, dan seluruh dunia.\n4. Menjadi jembatan terpercaya antara kekayaan alam nusantara dengan kebutuhan manufaktur makanan, farmasi, dan rempah global.",
+
+            // Email SMTP & cPanel Hosting Settings
+            'smtp_host' => 'mail.islenesia.com',
+            'smtp_port' => '465',
+            'smtp_encryption' => 'ssl',
+            'smtp_username' => 'noreply@islenesia.com',
+            'smtp_password' => '=}Wv#(oYPS)S#Y.2',
+            'mail_from_address' => 'noreply@islenesia.com',
+            'mail_from_name' => 'Islenesia Agro Export Desk',
+            'mail_receive_address' => 'noreply@islenesia.com',
+            'smtp_active' => '1',
         ];
 
         foreach ($settings as $key => $val) {

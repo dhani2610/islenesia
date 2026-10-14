@@ -281,15 +281,15 @@
     </footer>
 
     @if(request()->routeIs('home', 'catalog.show') || request()->is('/'))
-    <!-- Interactive Floating WhatsApp Widget Button (Tampil di Beranda & Detail Produk) -->
+    <!-- Interactive Floating WhatsApp & Email Widget Button (Tampil di Beranda & Detail Produk) -->
     <div class="wa-floating-btn" onclick="openWhatsAppModal('buyer')" id="waFloatingBtn">
         <div class="wa-btn-icon">
             <div class="wa-pulse"></div>
             <i class="fa-brands fa-whatsapp"></i>
         </div>
         <div class="wa-btn-text">
-            <h5>Chat Admin {{ $siteSettings['site_name'] ?? 'Islenesia' }}</h5>
-            <span>WhatsApp Resmi</span>
+            <h5>Chat & Inquiry {{ $siteSettings['site_name'] ?? 'Islenesia' }}</h5>
+            <span>WhatsApp / Email</span>
         </div>
     </div>
     @endif
@@ -303,8 +303,8 @@
                     <div class="wa-header-brand">
                         <div class="wa-avatar">🌴</div>
                         <div class="wa-header-title">
-                            <h4 id="waModalTitle">Admin Agregator {{ $siteSettings['site_name'] ?? 'Islenesia' }}</h4>
-                            <p><span class="online-dot"></span> Online & Siap Melayani</p>
+                            <h4 id="waModalTitle">Meja Ekspor {{ $siteSettings['site_name'] ?? 'Islenesia' }}</h4>
+                            <p><span class="online-dot"></span> Online &bull; Layanan WhatsApp / Email Resmi</p>
                         </div>
                     </div>
                     <button type="button" class="wa-close-btn" onclick="closeWhatsAppModal(null)">
@@ -314,16 +314,35 @@
 
                 <div class="wa-header-security-badge">
                     <i class="fa-solid fa-shield-halved text-gold"></i>
-                    <span>Transaksi & negosiasi komoditas terhubung ke Admin</span>
+                    <span>Transaksi & negosiasi komoditas terhubung ke Meja Ekspor</span>
                 </div>
             </div>
 
             <!-- Modal Body Form -->
-            <div class="wa-modal-body">
+            <div class="wa-modal-body" id="waModalBodyContainer">
                 <form id="waInquiryForm" onsubmit="submitWhatsAppWidget(event)">
                     @csrf
                     
                     <input type="text" name="website_trap" style="display:none;" tabindex="-1" autocomplete="off">
+
+                    <!-- Channel Selector: WhatsApp / Email -->
+                    <div style="margin-bottom: 1.15rem;">
+                        <div style="font-size: 0.725rem; font-weight: 800; color: var(--navy-primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.4rem; display: flex; justify-content: space-between; align-items: center;">
+                            <span>PILIH JALUR KOMUNIKASI:</span>
+                            <span style="font-size: 0.7rem; color: var(--gold-dark); font-weight: 700;">WHATSAPP / EMAIL</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; background: #E2E8F0; padding: 3px; border-radius: 10px;">
+                            <button type="button" class="channel-tab-btn active" id="channelTabWa" onclick="switchInquiryChannel('whatsapp')" style="border: none; padding: 0.55rem 0.75rem; border-radius: 8px; font-weight: 700; font-size: 0.825rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.4rem; background: #FFFFFF; color: var(--navy-primary); box-shadow: 0 2px 4px rgba(0,0,0,0.06);">
+                                <i class="fa-brands fa-whatsapp" style="color: #25D366; font-size: 1rem;"></i>
+                                <span>WhatsApp</span>
+                            </button>
+                            <button type="button" class="channel-tab-btn" id="channelTabEmail" onclick="switchInquiryChannel('email')" style="border: none; padding: 0.55rem 0.75rem; border-radius: 8px; font-weight: 700; font-size: 0.825rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.4rem; background: transparent; color: var(--slate-muted);">
+                                <i class="fa-regular fa-envelope text-gold" style="font-size: 0.95rem;"></i>
+                                <span>Official Email</span>
+                            </button>
+                        </div>
+                        <input type="hidden" name="channel" id="inquiryChannelInput" value="whatsapp">
+                    </div>
 
                     <!-- Role Tab Selector -->
                     <div class="wa-role-selector-label">PILIH KEPERLUAN ANDA:</div>
@@ -342,20 +361,34 @@
 
                     <!-- Input Nama / Perusahaan -->
                     <div class="wa-form-group">
-                        <label for="waInputName">Nama / Perusahaan</label>
-                        <input type="text" name="name" id="waInputName" class="wa-form-input" placeholder="Contoh: PT Sumber Pangan / Mr. Zhang / Bpk Ruslan" required>
+                        <label for="waInputName">Nama / Perusahaan <span style="color: #EF4444;">*</span></label>
+                        <input type="text" name="name" id="waInputName" class="wa-form-input" placeholder="Contoh: PT Sumber Pangan / Mr. Hans Schmidt (GmbH)" required>
+                    </div>
+
+                    <!-- Input Email Bisnis -->
+                    <div class="wa-form-group" id="groupInputEmail">
+                        <label for="waInputEmail">
+                            <span>Email Kantor / Perusahaan</span>
+                            <span id="emailRequiredMarker" style="color: #EF4444; display: none;">*</span>
+                            <span id="emailOptionalLabel" style="font-size: 0.72rem; color: var(--slate-muted); font-weight: normal; margin-left: 0.35rem;">(Disarankan untuk Buyer Internasional)</span>
+                        </label>
+                        <input type="email" name="email" id="waInputEmail" class="wa-form-input" placeholder="buyer@company.de / name@domain.com">
                     </div>
 
                     <!-- Input Nomor WhatsApp -->
-                    <div class="wa-form-group">
-                        <label for="waInputPhone">Nomor WhatsApp Anda</label>
-                        <input type="tel" name="whatsapp" id="waInputPhone" class="wa-form-input" placeholder="08xxxxxxxxxx" required>
+                    <div class="wa-form-group" id="groupInputPhone">
+                        <label for="waInputPhone">
+                            <span>Nomor WhatsApp / Phone</span>
+                            <span id="phoneRequiredMarker" style="color: #EF4444;">*</span>
+                            <span id="phoneOptionalLabel" style="font-size: 0.72rem; color: var(--slate-muted); font-weight: normal; margin-left: 0.35rem; display: none;">(Opsional jika via Email)</span>
+                        </label>
+                        <input type="tel" name="whatsapp" id="waInputPhone" class="wa-form-input" placeholder="+49 ... atau 08xxxxxxxxxx" required>
                     </div>
 
                     <!-- Input Pesan / Kebutuhan -->
                     <div class="wa-form-group">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                            <label for="waInputMessage" style="margin-bottom: 0;">Pesan / Kebutuhan</label>
+                            <label for="waInputMessage" style="margin-bottom: 0;">Pesan / Kebutuhan <span style="color: #EF4444;">*</span></label>
                             <span id="waMsgCounter" style="font-size: 0.72rem; color: var(--slate-muted);">Template Siap Kirim</span>
                         </div>
                         <textarea name="message" id="waInputMessage" class="wa-form-textarea" required></textarea>
@@ -393,14 +426,34 @@
 
                     <!-- Submit Button -->
                     <button type="submit" class="wa-submit-btn" id="waSubmitBtn">
-                        <i class="fa-regular fa-paper-plane"></i>
-                        <span>Lanjut ke WhatsApp Admin {{ $siteSettings['site_name'] ?? 'Islenesia' }} &rarr;</span>
+                        <i class="fa-regular fa-paper-plane" id="waSubmitBtnIcon"></i>
+                        <span id="waSubmitBtnText">Lanjut ke WhatsApp Admin {{ $siteSettings['site_name'] ?? 'Islenesia' }} &rarr;</span>
                     </button>
 
                     <div class="wa-footer-notice">
                         *Tercatat otomatis di database sistem agregator {{ $siteSettings['site_name'] ?? 'Islenesia' }}
                     </div>
                 </form>
+
+                <!-- Success Screen for Email Submissions -->
+                <div id="waInquirySuccessBox" style="display: none; text-align: center; padding: 2.25rem 1rem;">
+                    <div style="width: 72px; height: 72px; background: #ECFDF5; border: 2px solid #A7F3D0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; color: #059669; font-size: 2.25rem;">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <h3 style="color: var(--navy-primary); font-size: 1.35rem; margin-bottom: 0.65rem; font-weight: 800;">
+                        Inquiry Received!
+                    </h3>
+                    <p style="color: var(--slate-body); font-size: 0.9rem; line-height: 1.6; max-width: 440px; margin: 0 auto 1.25rem;">
+                        Permintaan penawaran resmi Anda telah berhasil kami terima. Email konfirmasi (Trade Inquiry Acknowledgment) telah otomatis dikirimkan ke alamat email Anda.
+                    </p>
+                    <div style="background: #F8FAFC; border: 1px solid var(--slate-border); border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 1.5rem; font-size: 0.825rem; color: var(--slate-muted);">
+                        Tim Meja Ekspor <strong>{{ $siteSettings['company_name'] ?? 'PT Islenesia Agro Nusantara' }}</strong> akan meninjau spesifikasi Anda dan merespons dalam <strong>24 jam kerja</strong>.
+                    </div>
+                    <button type="button" onclick="closeWhatsAppModal(null); resetInquiryModalForm();" class="btn btn-navy btn-sm" style="padding: 0.65rem 1.75rem;">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Selesai & Tutup</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -566,7 +619,84 @@
                 });
         };
 
+        /* WhatsApp & Email Channel Switch */
+        window.switchInquiryChannel = function(channel) {
+            var channelInput = document.getElementById('inquiryChannelInput');
+            if (channelInput) channelInput.value = channel;
+
+            var tabWa = document.getElementById('channelTabWa');
+            var tabEmail = document.getElementById('channelTabEmail');
+            var emailReq = document.getElementById('emailRequiredMarker');
+            var emailOpt = document.getElementById('emailOptionalLabel');
+            var phoneReq = document.getElementById('phoneRequiredMarker');
+            var phoneOpt = document.getElementById('phoneOptionalLabel');
+            var inputEmail = document.getElementById('waInputEmail');
+            var inputPhone = document.getElementById('waInputPhone');
+            var btnIcon = document.getElementById('waSubmitBtnIcon');
+            var btnText = document.getElementById('waSubmitBtnText');
+
+            if (channel === 'email') {
+                if (tabEmail) {
+                    tabEmail.style.background = '#FFFFFF';
+                    tabEmail.style.color = 'var(--navy-primary)';
+                    tabEmail.style.boxShadow = '0 2px 4px rgba(0,0,0,0.06)';
+                }
+                if (tabWa) {
+                    tabWa.style.background = 'transparent';
+                    tabWa.style.color = 'var(--slate-muted)';
+                    tabWa.style.boxShadow = 'none';
+                }
+
+                if (emailReq) emailReq.style.display = 'inline';
+                if (emailOpt) emailOpt.style.display = 'none';
+                if (inputEmail) inputEmail.required = true;
+
+                if (phoneReq) phoneReq.style.display = 'none';
+                if (phoneOpt) phoneOpt.style.display = 'inline';
+                if (inputPhone) inputPhone.required = false;
+
+                if (btnIcon) btnIcon.className = 'fa-regular fa-envelope';
+                if (btnText) btnText.innerHTML = 'Kirim Inquiry Resmi via Email &rarr;';
+            } else {
+                if (tabWa) {
+                    tabWa.style.background = '#FFFFFF';
+                    tabWa.style.color = 'var(--navy-primary)';
+                    tabWa.style.boxShadow = '0 2px 4px rgba(0,0,0,0.06)';
+                }
+                if (tabEmail) {
+                    tabEmail.style.background = 'transparent';
+                    tabEmail.style.color = 'var(--slate-muted)';
+                    tabEmail.style.boxShadow = 'none';
+                }
+
+                if (emailReq) emailReq.style.display = 'none';
+                if (emailOpt) emailOpt.style.display = 'inline';
+                if (inputEmail) inputEmail.required = false;
+
+                if (phoneReq) phoneReq.style.display = 'inline';
+                if (phoneOpt) phoneOpt.style.display = 'none';
+                if (inputPhone) inputPhone.required = true;
+
+                if (btnIcon) btnIcon.className = 'fa-regular fa-paper-plane';
+                if (btnText) btnText.innerHTML = 'Lanjut ke WhatsApp Admin ' + (window.SITE_NAME || 'Islenesia') + ' &rarr;';
+            }
+        };
+
+        window.resetInquiryModalForm = function() {
+            var form = document.getElementById('waInquiryForm');
+            var successBox = document.getElementById('waInquirySuccessBox');
+            if (form) {
+                form.reset();
+                form.style.display = 'block';
+            }
+            if (successBox) successBox.style.display = 'none';
+            window.switchInquiryChannel('whatsapp');
+            window.switchWaRole('buyer');
+            window.refreshChatCaptcha();
+        };
+
         window.openWhatsAppModal = function(role, defaultText, productId, modalTitle) {
+            window.resetInquiryModalForm();
             if (!role) role = 'buyer';
             window.switchWaRole(role);
             if (defaultText && waInputMessage) {
@@ -578,7 +708,7 @@
             }
             var titleEl = document.getElementById('waModalTitle');
             if (titleEl) {
-                titleEl.textContent = modalTitle || ("Admin Agregator " + window.SITE_NAME);
+                titleEl.textContent = modalTitle || ("Meja Ekspor " + window.SITE_NAME);
             }
             var chipQuote = document.getElementById('chipQuote');
             var chipGeneral = document.getElementById('chipGeneral');
@@ -589,7 +719,6 @@
                 if (chipQuote) chipQuote.classList.remove('active');
                 if (chipGeneral) chipGeneral.classList.add('active');
             }
-            window.refreshChatCaptcha();
             if (waModal) waModal.classList.add('active');
             document.body.style.overflow = 'hidden';
         };
@@ -607,9 +736,12 @@
             var submitBtn = document.getElementById('waSubmitBtn');
             var originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
 
+            var channelInput = document.getElementById('inquiryChannelInput');
+            var channel = channelInput ? channelInput.value : 'whatsapp';
+
             if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menghubungkan ke Admin...';
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses Pengiriman...';
             }
 
             var formData = new FormData(form);
@@ -631,13 +763,18 @@
                 return res.json();
             })
             .then(function(data) {
-                if (data.redirect_url) {
+                if (data.channel === 'email') {
+                    /* Show in-modal success acknowledgment screen */
+                    if (form) form.style.display = 'none';
+                    var successBox = document.getElementById('waInquirySuccessBox');
+                    if (successBox) successBox.style.display = 'block';
+                } else if (data.redirect_url) {
                     window.open(data.redirect_url, '_blank');
                     window.closeWhatsAppModal(null);
-                    if (form) form.reset();
-                    window.switchWaRole('buyer');
-                    var errEl = document.getElementById('waCaptchaError');
-                    if (errEl) errEl.style.display = 'none';
+                    window.resetInquiryModalForm();
+                } else {
+                    window.closeWhatsAppModal(null);
+                    window.resetInquiryModalForm();
                 }
             })
             .catch(function(err) {
@@ -656,6 +793,14 @@
                     window.refreshChatCaptcha();
                     return;
                 }
+
+                /* If user selected Email but network failed */
+                if (channel === 'email') {
+                    alert('Gagal mengirimkan inquiry email. Silakan periksa kembali isian form Anda atau hubungi kami langsung via WhatsApp.');
+                    return;
+                }
+
+                /* WhatsApp fallback */
                 var buyerPhone = "{{ preg_replace('/[^0-9]/', '', !empty($siteSettings['whatsapp_buyer']) ? $siteSettings['whatsapp_buyer'] : ($siteSettings['whatsapp_number'] ?? '6285161313914')) }}";
                 var pemasokPhone = "{{ preg_replace('/[^0-9]/', '', !empty($siteSettings['whatsapp_pemasok']) ? $siteSettings['whatsapp_pemasok'] : ($siteSettings['whatsapp_number'] ?? '6285161313914')) }}";
                 var currentRole = waRoleInput ? waRoleInput.value : 'buyer';

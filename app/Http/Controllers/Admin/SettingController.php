@@ -88,6 +88,17 @@ class SettingController extends Controller
             'about_mission' => 'nullable|string',
             'about_market_title' => 'nullable|string|max:255',
             'about_market_subtitle' => 'nullable|string',
+
+            // Email SMTP & cPanel Hosting Settings
+            'smtp_host' => 'nullable|string|max:150',
+            'smtp_port' => 'nullable|string|max:10',
+            'smtp_encryption' => 'nullable|string|max:10',
+            'smtp_username' => 'nullable|string|max:150',
+            'smtp_password' => 'nullable|string|max:255',
+            'mail_from_address' => 'nullable|string|max:150',
+            'mail_from_name' => 'nullable|string|max:150',
+            'mail_receive_address' => 'nullable|string|max:150',
+            'smtp_active' => 'nullable|string|in:0,1',
             
             // Media Files
             'site_logo' => 'nullable|file|mimes:jpeg,png,jpg,webp,svg|max:2048',
@@ -157,7 +168,12 @@ class SettingController extends Controller
             'cta_subtitle', 'about_hero_badge', 'about_hero_title',
             'about_hero_subtitle', 'about_story_badge', 'about_story',
             'about_story_p2', 'about_vision', 'about_mission',
-            'about_market_title', 'about_market_subtitle'
+            'about_market_title', 'about_market_subtitle',
+
+            // SMTP keys
+            'smtp_host', 'smtp_port', 'smtp_encryption', 'smtp_username',
+            'smtp_password', 'mail_from_address', 'mail_from_name',
+            'mail_receive_address', 'smtp_active'
         ];
 
         foreach ($fieldsToSave as $field) {
@@ -168,6 +184,21 @@ class SettingController extends Controller
 
         Cache::forget('all_settings');
 
-        return back()->with('success', 'Pengaturan website, branding, dan SEO berhasil disimpan!');
+        return back()->with('success', 'Pengaturan website, branding, SEO, dan Email SMTP berhasil disimpan!');
+    }
+
+    /**
+     * Send test email to verify SMTP connection.
+     */
+    public function testSmtp(Request $request)
+    {
+        $request->validate([
+            'test_email' => 'nullable|email|max:150',
+        ]);
+
+        $target = $request->input('test_email');
+        $result = \App\Services\MailConfigService::testConnection($target);
+
+        return response()->json($result);
     }
 }

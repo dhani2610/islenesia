@@ -31,11 +31,11 @@
                     <th style="width: 50px;">No</th>
                     <th>Peran</th>
                     <th>Nama / Perusahaan</th>
-                    <th>WhatsApp</th>
+                    <th>Kontak (WA / Email)</th>
                     <th>Pesan / Kebutuhan</th>
                     <th>Status</th>
                     <th>Tanggal</th>
-                    <th style="width: 120px; text-align: center;">Aksi</th>
+                    <th style="width: 150px; text-align: center;">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,7 +64,7 @@
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                 { data: 'type_badge', name: 'type' },
                 { data: 'name', name: 'name' },
-                { data: 'whatsapp', name: 'whatsapp' },
+                { data: 'contact_info', name: 'whatsapp' },
                 { data: 'message', name: 'message' },
                 { data: 'status_badge', name: 'status' },
                 { data: 'created_date', name: 'created_at' },
