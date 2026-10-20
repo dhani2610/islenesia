@@ -80,6 +80,11 @@ class ProductController extends Controller
             'is_active' => 'nullable|boolean',
             'spec_keys' => 'nullable|array',
             'spec_values' => 'nullable|array',
+            'gallery_items' => 'nullable|array',
+            'gallery_items.*.file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'gallery_items.*.title' => 'nullable|string|max:255',
+            'gallery_items.*.caption' => 'nullable|string|max:1000',
+            'gallery_items.*.existing_image' => 'nullable|string|max:255',
         ]);
 
         $data = [
@@ -106,7 +111,29 @@ class ProductController extends Controller
         }
         $data['specifications'] = $specs;
 
-        // Upload image
+        // Process gallery items
+        $gallery = [];
+        if ($request->has('gallery_items')) {
+            foreach ($request->input('gallery_items', []) as $idx => $item) {
+                $imgPath = null;
+                if ($request->hasFile("gallery_items.{$idx}.file")) {
+                    $imgPath = $request->file("gallery_items.{$idx}.file")->store('products/gallery', 'public');
+                } elseif (!empty($item['existing_image'])) {
+                    $imgPath = $item['existing_image'];
+                }
+
+                if (!empty($imgPath)) {
+                    $gallery[] = [
+                        'image' => $imgPath,
+                        'title' => !empty($item['title']) ? strip_tags($item['title']) : '',
+                        'caption' => !empty($item['caption']) ? strip_tags($item['caption']) : '',
+                    ];
+                }
+            }
+        }
+        $data['gallery'] = $gallery;
+
+        // Upload main image
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products', 'public');
             $data['image'] = $path;
@@ -114,7 +141,7 @@ class ProductController extends Controller
 
         Product::create($data);
 
-        return redirect()->route('admin.products.index')->with('success', 'Produk komoditas berhasil ditambahkan!');
+        return redirect()->route('admin.products.index')->with('success', 'Produk komoditas beserta galeri foto berhasil ditambahkan!');
     }
 
     /**
@@ -146,6 +173,11 @@ class ProductController extends Controller
             'is_active' => 'nullable|boolean',
             'spec_keys' => 'nullable|array',
             'spec_values' => 'nullable|array',
+            'gallery_items' => 'nullable|array',
+            'gallery_items.*.file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'gallery_items.*.title' => 'nullable|string|max:255',
+            'gallery_items.*.caption' => 'nullable|string|max:1000',
+            'gallery_items.*.existing_image' => 'nullable|string|max:255',
         ]);
 
         $data = [
@@ -172,7 +204,49 @@ class ProductController extends Controller
         }
         $data['specifications'] = $specs;
 
-        // Upload image
+        // Process gallery items
+        $gallery = [];
+        $existingKept = [];
+        if ($request->has('gallery_items')) {
+            foreach ($request->input('gallery_items', []) as $idx => $item) {
+                $imgPath = null;
+                $hasNewFile = $request->hasFile("gallery_items.{$idx}.file");
+
+                if ($hasNewFile) {
+                    $imgPath = $request->file("gallery_items.{$idx}.file")->store('products/gallery', 'public');
+                    // Remove old replaced image if from public storage
+                    if (!empty($item['existing_image']) && Storage::disk('public')->exists($item['existing_image'])) {
+                        Storage::disk('public')->delete($item['existing_image']);
+                    }
+                } elseif (!empty($item['existing_image'])) {
+                    $imgPath = $item['existing_image'];
+                    $existingKept[] = $imgPath;
+                }
+
+                if (!empty($imgPath)) {
+                    $gallery[] = [
+                        'image' => $imgPath,
+                        'title' => !empty($item['title']) ? strip_tags($item['title']) : '',
+                        'caption' => !empty($item['caption']) ? strip_tags($item['caption']) : '',
+                    ];
+                }
+            }
+        }
+
+        // Clean up deleted gallery images from storage (only files inside products/gallery/)
+        if (!empty($product->gallery) && is_array($product->gallery)) {
+            foreach ($product->gallery as $oldG) {
+                $oldImg = is_array($oldG) ? ($oldG['image'] ?? '') : $oldG;
+                if ($oldImg && !in_array($oldImg, $existingKept) && str_starts_with($oldImg, 'products/gallery/')) {
+                    if (Storage::disk('public')->exists($oldImg)) {
+                        Storage::disk('public')->delete($oldImg);
+                    }
+                }
+            }
+        }
+        $data['gallery'] = $gallery;
+
+        // Upload main image
         if ($request->hasFile('image')) {
             if ($product->image && Storage::disk('public')->exists($product->image)) {
                 Storage::disk('public')->delete($product->image);
@@ -182,7 +256,7 @@ class ProductController extends Controller
 
         $product->update($data);
 
-        return redirect()->route('admin.products.index')->with('success', 'Produk komoditas berhasil diperbarui!');
+        return redirect()->route('admin.products.index')->with('success', 'Produk komoditas dan galeri dokumentasi berhasil diperbarui!');
     }
 
     /**
@@ -194,6 +268,17 @@ class ProductController extends Controller
         if ($product->image && Storage::disk('public')->exists($product->image)) {
             Storage::disk('public')->delete($product->image);
         }
+
+        // Delete gallery files
+        if (!empty($product->gallery) && is_array($product->gallery)) {
+            foreach ($product->gallery as $g) {
+                $img = is_array($g) ? ($g['image'] ?? '') : $g;
+                if ($img && Storage::disk('public')->exists($img)) {
+                    Storage::disk('public')->delete($img);
+                }
+            }
+        }
+
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Produk berhasil dihapus.');

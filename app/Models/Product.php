@@ -55,4 +55,49 @@ class Product extends Model
         }
         return asset('images/products/' . ($this->image ?: 'default-product.jpg'));
     }
+
+    /**
+     * Get processed gallery items with verified asset URLs.
+     */
+    public function getGalleryItemsAttribute(): array
+    {
+        if (empty($this->gallery) || !is_array($this->gallery)) {
+            return [];
+        }
+
+        $items = [];
+        foreach ($this->gallery as $index => $item) {
+            $img = is_array($item) ? ($item['image'] ?? '') : $item;
+            $title = is_array($item) ? ($item['title'] ?? '') : '';
+            $caption = is_array($item) ? ($item['caption'] ?? '') : '';
+
+            if (empty($img)) {
+                continue;
+            }
+
+            if (str_starts_with($img, 'http://') || str_starts_with($img, 'https://')) {
+                $url = $img;
+            } elseif (file_exists(public_path('storage/' . $img)) || file_exists(storage_path('app/public/' . $img))) {
+                $url = asset('storage/' . $img);
+            } elseif (file_exists(public_path('images/products/gallery/' . basename($img)))) {
+                $url = asset('images/products/gallery/' . basename($img));
+            } elseif (file_exists(public_path('images/products/' . basename($img)))) {
+                $url = asset('images/products/' . basename($img));
+            } elseif (file_exists(public_path($img))) {
+                $url = asset($img);
+            } else {
+                $url = asset('storage/' . $img);
+            }
+
+            $items[] = [
+                'id' => $index + 1,
+                'image' => $img,
+                'image_url' => $url,
+                'title' => $title ?: 'Foto Dokumentasi ' . ($index + 1),
+                'caption' => $caption ?: '',
+            ];
+        }
+
+        return $items;
+    }
 }

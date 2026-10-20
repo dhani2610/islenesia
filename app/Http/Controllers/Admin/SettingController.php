@@ -194,10 +194,24 @@ class SettingController extends Controller
     {
         $request->validate([
             'test_email' => 'nullable|email|max:150',
+            'smtp_host' => 'nullable|string|max:150',
+            'smtp_port' => 'nullable|numeric',
+            'smtp_encryption' => 'nullable|string|max:20',
+            'smtp_username' => 'nullable|string|max:150',
+            'smtp_password' => 'nullable|string|max:255',
+            'mail_from_address' => 'nullable|email|max:150',
+            'mail_from_name' => 'nullable|string|max:150',
         ]);
 
         $target = $request->input('test_email');
-        $result = \App\Services\MailConfigService::testConnection($target);
+        $overrides = array_filter($request->only([
+            'smtp_host', 'smtp_port', 'smtp_encryption', 'smtp_username',
+            'smtp_password', 'mail_from_address', 'mail_from_name'
+        ]), function($v) {
+            return $v !== null && $v !== '';
+        });
+
+        $result = \App\Services\MailConfigService::testConnection($target, $overrides);
 
         return response()->json($result);
     }

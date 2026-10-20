@@ -111,6 +111,28 @@ class DatabaseSeeder extends Seeder
                     'MOQ' => '10 kg (Air Freight) / 500 kg (Sea Freight)',
                 ],
                 'image' => 'vanilla.jpg',
+                'gallery' => [
+                    [
+                        'image' => 'products/gallery/vanilla-sorting.jpg',
+                        'title' => 'Sortasi & Pengukuran Panjang Biji (18-20+ cm)',
+                        'caption' => 'Setiap batang biji vanili dipilah secara manual untuk memastikan kelenturan dan panjang standar gourmet grade A.',
+                    ],
+                    [
+                        'image' => 'products/gallery/vanilla-curing.jpg',
+                        'title' => 'Proses Pengeringan & Curing Tradisional',
+                        'caption' => 'Penjemuran bertahap di bawah sinar matahari pagi untuk mematangkan aroma vanillin alami tanpa bahan kimia.',
+                    ],
+                    [
+                        'image' => 'products/gallery/vanilla-lab.jpg',
+                        'title' => 'Pengujian Laboratorium Kadar Vanillin (>2.2%)',
+                        'caption' => 'Uji laboratorium terakreditasi untuk memastikan kadar kelembapan 25-30% dan bebas kontaminasi jamur.',
+                    ],
+                    [
+                        'image' => 'products/gallery/vanilla-packing.jpg',
+                        'title' => 'Pengemasan Vakum Kedap Udara Food-Grade',
+                        'caption' => 'Kemasan vakum per 1 kg dalam master box ekspor untuk menjaga aroma dan kesegaran selama pengiriman antarbenua.',
+                    ],
+                ],
                 'is_featured' => true,
                 'sort_order' => 1,
             ],
@@ -138,6 +160,28 @@ class DatabaseSeeder extends Seeder
                     'MOQ' => '100 kg / 1 Metric Ton (Container)',
                 ],
                 'image' => 'kratom.jpg',
+                'gallery' => [
+                    [
+                        'image' => 'products/gallery/kratom-harvest.jpg',
+                        'title' => 'Pemanenan Daun Pilihan Kapuas Hulu',
+                        'caption' => 'Dipetik selektif dari pohon kratom dewasa di pedalaman Kalimantan Barat dengan alkaloid tinggi.',
+                    ],
+                    [
+                        'image' => 'products/gallery/kratom-milling.jpg',
+                        'title' => 'Penggilingan Ultra-Fine Nano (100-120 Mesh)',
+                        'caption' => 'Mesin nano-milling modern menghasilkan bubuk super halus yang larut sempurna dan steril.',
+                    ],
+                    [
+                        'image' => 'products/gallery/kratom-lab.jpg',
+                        'title' => 'Sertifikasi Bebas Salmonella & Logam Berat',
+                        'caption' => 'Pengujian rutin laboratorium pihak ketiga untuk menjamin kemurnian bahan herbal ekspor.',
+                    ],
+                    [
+                        'image' => 'products/gallery/kratom-packing.jpg',
+                        'title' => 'Kemasan Multiwall Kraft Bag 25 kg',
+                        'caption' => 'Dikemas dalam kantong kraft berlapis polietilen kedap udara untuk pengiriman kontainer skala industri.',
+                    ],
+                ],
                 'is_featured' => true,
                 'sort_order' => 2,
             ],
@@ -165,6 +209,28 @@ class DatabaseSeeder extends Seeder
                     'MOQ' => '1,000 kg (LCL) / 1 FCL 20ft (19.2 MT)',
                 ],
                 'image' => 'coffee.jpg',
+                'gallery' => [
+                    [
+                        'image' => 'products/gallery/coffee-cherry.jpg',
+                        'title' => 'Pemetikan Selektif Buah Ceri Merah (Full Red)',
+                        'caption' => 'Hanya buah kopi matang sempurna dari ketinggian 1.400 mdpl yang dipetik untuk menjaga konsistensi rasa manis.',
+                    ],
+                    [
+                        'image' => 'products/gallery/coffee-drying.jpg',
+                        'title' => 'Penjemuran di Atas Raised Bed Tertutup',
+                        'caption' => 'Sirkulasi udara merata pada meja jemur gantung untuk mencapai kadar air stabil 11-12%.',
+                    ],
+                    [
+                        'image' => 'products/gallery/coffee-cupping.jpg',
+                        'title' => 'Sesi Cupping Standar SCA (Score 84+)',
+                        'caption' => 'Uji cita rasa profesional oleh Q-Grader bersertifikat menjamin profil rasa fruity dan clean aftertaste.',
+                    ],
+                    [
+                        'image' => 'products/gallery/coffee-beans.jpg',
+                        'title' => 'Green Beans Grade 1 Ekspor Double Picked',
+                        'caption' => 'Sortasi manual ganda meminimalkan tingkat defect di bawah 3% sesuai standar Specialty Coffee dunia.',
+                    ],
+                ],
                 'is_featured' => true,
                 'sort_order' => 3,
             ],
@@ -186,12 +252,33 @@ class DatabaseSeeder extends Seeder
                     'Headless Cloves' => '< 2%',
                     'Foreign Matters / Stems' => '< 0.5%',
                     'Moisture Content' => '10% - 12%',
-                    'Foreign Matters / Stems' => '< 0.5%',
                     'Eugenol Content' => '16% - 19% (High Essential Oil)',
                     'Origin' => 'Maluku & Central Sulawesi, Indonesia',
                     'MOQ' => '1 Metric Ton / 20ft FCL (10 MT)',
                 ],
                 'image' => 'cloves.jpg',
+                'gallery' => [
+                    [
+                        'image' => 'products/gallery/cloves-harvest.jpg',
+                        'title' => 'Pemetikan Kuncup Bunga Maluku & Sulawesi',
+                        'caption' => 'Dipanen tepat waktu sebelum bunga mekar untuk menjaga keutuhan kepala cengkeh dan kandungan minyak atsiri.',
+                    ],
+                    [
+                        'image' => 'products/gallery/cloves-drying.jpg',
+                        'title' => 'Penjemuran Alami Sinar Matahari Tropis',
+                        'caption' => 'Pengeringan alami merata untuk mempertahankan warna merah kecokelatan khas varietas Lalpari.',
+                    ],
+                    [
+                        'image' => 'products/gallery/cloves-sorting.jpg',
+                        'title' => 'Pembersihan Gagang Asing & Sortasi Grade A',
+                        'caption' => 'Tingkat kebersihan tinggi dengan persentase tangkai dan benda asing kurang dari 0.5%.',
+                    ],
+                    [
+                        'image' => 'products/gallery/cloves-packing.jpg',
+                        'title' => 'Pengemasan Karung Goni Standar Karantina',
+                        'caption' => 'Disertai sertifikat Phytosanitary resmi Badan Karantina Pertanian Indonesia untuk kelancaran ekspor.',
+                    ],
+                ],
                 'is_featured' => true,
                 'sort_order' => 4,
             ],

@@ -28,6 +28,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::prefix('catalog')->name('catalog.')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('index');
     Route::get('/{slug}', [ProductController::class, 'show'])->name('show');
+    Route::get('/{slug}/gallery', [ProductController::class, 'gallery'])->name('gallery');
 });
 
 Route::get('/tentang-kami', [AboutController::class, 'index'])->name('about');

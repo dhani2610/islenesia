@@ -79,4 +79,23 @@ class ProductController extends Controller
 
         return view('pages.catalog.show', compact('product', 'relatedProducts'));
     }
+
+    /**
+     * Dynamic lightweight JSON endpoint for product gallery images.
+     * Prevents heavy initial page payload and loads smoothly via client-side fetch.
+     */
+    public function gallery(string $slug)
+    {
+        $product = Product::where('slug', $slug)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        return response()->json([
+            'success' => true,
+            'product_id' => $product->id,
+            'product_name' => $product->name,
+            'count' => count($product->gallery_items),
+            'items' => $product->gallery_items,
+        ]);
+    }
 }

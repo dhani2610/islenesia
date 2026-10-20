@@ -709,6 +709,28 @@
             <li><strong>Pengaturan Server Email Hosting (cPanel):</strong> Dapat diatur dan diuji coba melalui menu <strong>Pengaturan Website ➔ Tab "Email SMTP & Hosting"</strong> dengan kredensial cPanel Anda (Port 465 SSL).</li>
         </ul>
     </div>
+
+    <div class="action-step-card">
+        <h5><span class="step-num">3</span> Fitur Galeri Foto Dokumentasi & QC (CMS Multi-Foto & Lightbox Interaktif)</h5>
+        <p style="font-size: 0.875rem; color: #475569; line-height: 1.6; margin-bottom: 0.75rem;">
+            Untuk meyakinkan calon buyer luar negeri tentang keaslian dan standar mutu ekspor, Anda dapat menambahkan <strong>beberapa foto dokumentasi</strong> pada setiap produk (misal: proses sortasi, pengeringan, pengujian laboratorium, hingga pengemasan vakum):
+        </p>
+        <ol style="margin-left: 1.5rem; color: #475569; font-size: 0.875rem; line-height: 1.7;">
+            <li>Pada form <strong>Tambah / Edit Komoditas</strong>, lihat bagian <strong>"Galeri Foto Dokumentasi Produk & QC"</strong> di bawah tabel spesifikasi teknis.</li>
+            <li>Klik tombol <strong>"+ Tambah Foto Galeri"</strong> untuk memunculkan kartu foto baru.</li>
+            <li>Upload file foto dokumentasi Anda (JPG, PNG, atau WebP). Sistem akan langsung menampilkan pratinjau gambar secara real-time.</li>
+            <li>Ketikkan <strong>Judul / Label Foto</strong> (misal: <em>Sortasi & Pengukuran Panjang Biji 18-20+ cm</em>).</li>
+            <li>Ketikkan <strong>Deskripsi Singkat / Keterangan</strong> (misal: <em>Pemilahan manual batang biji vanili grade A dengan kelembapan terkontrol</em>).</li>
+            <li>Anda dapat menambahkan beberapa foto sekaligus atau menghapus foto yang tidak diperlukan dengan tombol merah <strong>"Hapus"</strong>.</li>
+            <li>Klik tombol <strong>"Simpan / Perbarui Komoditas"</strong>.</li>
+        </ol>
+        <div class="tip-box">
+            <i class="fa-solid fa-lightbulb"></i>
+            <div>
+                <strong>Keunggulan Performa:</strong> Foto-foto galeri dimuat di halaman detail katalog secara <em>asynchronous</em> melalui JavaScript (AJAX lazy-load) sehingga tidak memberatkan loading awal halaman website. Pengunjung dapat mengklik foto mana saja untuk membukanya dalam mode <strong>Lightbox Layar Penuh</strong>, berpindah antar foto dengan tombol panah/keyboard, serta membaca informasi detail di bawah masing-masing foto.
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- ========================================================================= -->

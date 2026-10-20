@@ -651,6 +651,25 @@
             feedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sedang melakukan handshake SMTP dan mengirimkan email uji coba ke <strong>' + email + '</strong>...';
         }
 
+        var hostEl = document.querySelector('input[name="smtp_host"]');
+        var portEl = document.querySelector('input[name="smtp_port"]');
+        var encEl = document.querySelector('select[name="smtp_encryption"]');
+        var userEl = document.querySelector('input[name="smtp_username"]');
+        var passEl = document.querySelector('input[name="smtp_password"]');
+        var fromAddrEl = document.querySelector('input[name="mail_from_address"]');
+        var fromNameEl = document.querySelector('input[name="mail_from_name"]');
+
+        var payload = {
+            test_email: email,
+            smtp_host: hostEl ? hostEl.value.trim() : '',
+            smtp_port: portEl ? portEl.value.trim() : '',
+            smtp_encryption: encEl ? encEl.value : '',
+            smtp_username: userEl ? userEl.value.trim() : '',
+            smtp_password: passEl ? passEl.value : '',
+            mail_from_address: fromAddrEl ? fromAddrEl.value.trim() : '',
+            mail_from_name: fromNameEl ? fromNameEl.value.trim() : ''
+        };
+
         fetch("{{ route('admin.settings.test-smtp') }}", {
             method: 'POST',
             headers: {
@@ -658,7 +677,7 @@
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({ test_email: email })
+            body: JSON.stringify(payload)
         })
         .then(function(res) { return res.json(); })
         .then(function(data) {

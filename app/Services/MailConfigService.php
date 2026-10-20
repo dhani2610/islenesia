@@ -13,21 +13,39 @@ use Illuminate\Support\Facades\Mail;
 class MailConfigService
 {
     /**
-     * Dynamically configure SMTP transport from database settings or environment fallbacks.
+     * Dynamically configure SMTP transport from database settings, runtime overrides, or environment fallbacks.
      */
-    public static function configure(): void
+    public static function configure(?array $overrides = null): void
     {
-        $host = Setting::get('smtp_host', env('MAIL_HOST', 'mail.islenesia.com'));
-        $port = (int) Setting::get('smtp_port', env('MAIL_PORT', 465));
-        $encryption = Setting::get('smtp_encryption', env('MAIL_ENCRYPTION', 'ssl'));
-        $username = Setting::get('smtp_username', env('MAIL_USERNAME', 'noreply@islenesia.com'));
-        $password = Setting::get('smtp_password', env('MAIL_PASSWORD', '=}' . 'Wv#(oYPS)S#Y.2'));
-        $fromAddress = Setting::get('mail_from_address', env('MAIL_FROM_ADDRESS', 'noreply@islenesia.com'));
-        $fromName = Setting::get('mail_from_name', env('MAIL_FROM_NAME', 'Islenesia Agro Export Desk'));
+        $overrides = $overrides ?? [];
+
+        $host = $overrides['smtp_host'] ?? Setting::get('smtp_host', env('MAIL_HOST', 'mail.islenesia.com'));
+        $port = (int) ($overrides['smtp_port'] ?? Setting::get('smtp_port', env('MAIL_PORT', 465)));
+        $encryption = $overrides['smtp_encryption'] ?? Setting::get('smtp_encryption', env('MAIL_ENCRYPTION', 'ssl'));
+        $username = $overrides['smtp_username'] ?? Setting::get('smtp_username', env('MAIL_USERNAME', 'noreply@islenesia.com'));
+        $password = $overrides['smtp_password'] ?? Setting::get('smtp_password', env('MAIL_PASSWORD', '=}' . 'Wv#(oYPS)S#Y.2'));
+        $fromAddress = $overrides['mail_from_address'] ?? Setting::get('mail_from_address', env('MAIL_FROM_ADDRESS', 'noreply@islenesia.com'));
+        $fromName = $overrides['mail_from_name'] ?? Setting::get('mail_from_name', env('MAIL_FROM_NAME', 'Islenesia Agro Export Desk'));
+
+        // If host is default starter 'mailpit' or empty, safely fallback to cPanel host
+        if (empty($host) || $host === 'mailpit' || $host === 'localhost') {
+            $host = 'mail.islenesia.com';
+        }
+        if (empty($port) || $port === 1025) {
+            $port = 465;
+        }
+        if (empty($username)) {
+            $username = 'noreply@islenesia.com';
+        }
+        if (empty($password)) {
+            $password = '=}' . 'Wv#(oYPS)S#Y.2';
+        }
 
         // Normalize encryption
         if ($encryption === 'none' || empty($encryption)) {
             $encryption = null;
+        } elseif ($port === 465 && empty($encryption)) {
+            $encryption = 'ssl';
         }
 
         Config::set('mail.default', 'smtp');
@@ -44,6 +62,15 @@ class MailConfigService
 
         Config::set('mail.from.address', $fromAddress);
         Config::set('mail.from.name', $fromName);
+
+        // Crucial: Purge cached SymfonyMailer transport so Laravel rebuilds the mailer instance with new settings
+        try {
+            if (app()->bound('mail.manager')) {
+                app('mail.manager')->purge('smtp');
+            }
+        } catch (\Throwable $e) {
+            // Ignore if mail manager not initialized yet
+        }
     }
 
     /**
@@ -109,12 +136,12 @@ class MailConfigService
     /**
      * Send a test email to verify SMTP configuration from Admin Panel.
      */
-    public static function testConnection(?string $targetEmail = null): array
+    public static function testConnection(?string $targetEmail = null, ?array $overrides = null): array
     {
         try {
-            self::configure();
+            self::configure($overrides);
 
-            $recipient = $targetEmail ?: Setting::get('mail_receive_address', Setting::get('email', 'info@islenesia.com'));
+            $recipient = $targetEmail ?: ($overrides['mail_receive_address'] ?? Setting::get('mail_receive_address', Setting::get('email', 'noreply@islenesia.com')));
             if (empty($recipient) || !filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
                 return [
                     'success' => false,
@@ -124,8 +151,8 @@ class MailConfigService
 
             $siteName = Setting::get('site_name', 'Islenesia');
             $serverTime = now()->format('d M Y - H:i:s T');
-            $host = Setting::get('smtp_host', 'mail.islenesia.com');
-            $port = Setting::get('smtp_port', '465');
+            $host = $overrides['smtp_host'] ?? Setting::get('smtp_host', 'mail.islenesia.com');
+            $port = $overrides['smtp_port'] ?? Setting::get('smtp_port', '465');
 
             $htmlContent = "
                 <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden;'>
