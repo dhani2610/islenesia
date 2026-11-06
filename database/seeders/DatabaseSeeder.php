@@ -282,6 +282,37 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => true,
                 'sort_order' => 4,
             ],
+            [
+                'name' => 'Akar Bajakah Premium (Spatholobus Littoralis Hassk)',
+                'slug' => 'akar-bajakah-premium',
+                'category' => 'Herbal',
+                'short_description' => 'Akar Bajakah asli pedalaman Kalimantan kualitas ekspor. Kaya senyawa antioksidan fenolik, saponin, dan tanin alami untuk industri herbal, farmasi, dan teh kesehatan global.',
+                'description' => '<p><strong>Akar Bajakah (Spatholobus Littoralis Hassk)</strong> dipanen secara berkelanjutan oleh komunitas lokal dari hutan tropis Kalimantan. Diproses melalui tahap pencucian higienis, pengeringan terstandarisasi, dan pemotongan rapi sesuai kebutuhan industri medis dan herbal internasional.</p>',
+                'specifications' => [
+                    'Botanical Name' => 'Spatholobus Littoralis Hassk',
+                    'Origin' => 'Central & East Kalimantan, Indonesia',
+                    'Grade' => 'Grade 1 Export (Dry Root / Cut)',
+                    'Form' => 'Dried Chips / Root Cuts / Coarse Powder',
+                    'Moisture Content' => '< 10%',
+                    'Packaging' => 'Food Grade Multiwall Bag / Vacuum Pack (25 kg)',
+                    'MOQ' => '50 kg (Sample) / 1 Metric Ton (Container)',
+                ],
+                'image' => 'bajakah.jpg',
+                'gallery' => [
+                    [
+                        'image' => 'products/gallery/kratom-harvest.jpg',
+                        'title' => 'Pemanenan Selektif Akar Bajakah Hutan Kalimantan',
+                        'caption' => 'Dipanen dari pohon bajakah dewasa hutan hujan tropis dengan kandungan fitokimia optimal.',
+                    ],
+                    [
+                        'image' => 'products/gallery/kratom-drying.jpg',
+                        'title' => 'Pengeringan Higienis & Kadar Air Terkontrol',
+                        'caption' => 'Proses pengeringan bertahap menjaga keaslian senyawa antioksidan dan mencegah jamur.',
+                    ],
+                ],
+                'is_featured' => true,
+                'sort_order' => 5,
+            ],
         ];
 
         foreach ($products as $prod) {

@@ -21,7 +21,6 @@ class HomeController extends Controller
     {
         $products = Product::where('is_active', true)
             ->orderBy('sort_order')
-            ->take(4)
             ->get();
 
         $testimonials = Testimonial::where('is_active', true)

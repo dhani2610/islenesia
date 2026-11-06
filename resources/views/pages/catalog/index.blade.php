@@ -26,8 +26,35 @@
         box-shadow: var(--shadow-sm);
         display: flex;
         flex-direction: column;
-        height: 100%;
+        flex: 0 1 calc(33.333% - 1.35rem);
+        min-width: 280px;
+        max-width: 380px;
+        width: 100%;
         position: relative;
+    }
+
+    @media (min-width: 1120px) {
+        .product-grid > .shopee-skeleton-card:first-child:nth-last-child(4),
+        .product-grid > .shopee-skeleton-card:first-child:nth-last-child(4) ~ .shopee-skeleton-card {
+            flex: 0 1 calc(25% - 1.5rem);
+            max-width: 300px;
+            min-width: 250px;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .shopee-skeleton-card {
+            flex: 0 1 calc(50% - 1rem);
+            max-width: 420px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .shopee-skeleton-card {
+            flex: 0 1 100%;
+            max-width: 100%;
+            min-width: 100%;
+        }
     }
 
     .shopee-skeleton-img-wrap {
@@ -215,7 +242,7 @@
                     </div>
                 </div>
             @empty
-                <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem;">
+                <div style="width: 100%; text-align: center; padding: 3rem 1rem;">
                     <p style="color: var(--slate-muted);">Belum ada komoditas yang dipublikasikan saat ini.</p>
                 </div>
             @endforelse
